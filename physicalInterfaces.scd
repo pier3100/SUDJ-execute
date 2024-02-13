@@ -6,41 +6,40 @@
 
 // midi xone
 // channel faders
-MidiCC([~mXone, 11, 3], ServerTarget(~sChannel1,\faderVolume), mode:\absolute);
-MidiCC([~mXone, 11, 6], ServerTarget(~sChannel3,\faderVolume), mode:\absolute);
-MidiCC([~mXone, 11, 8], ServerTarget(~sChannel2,\faderVolume), mode:\absolute);
-MidiCC([~mXone, 11, 28], ServerTarget(~sChannel4,\faderVolume), mode:\absolute);
+MidiCC([3, 11, ~mXone], ServerTarget(~sChannel1,\faderVolume), mode:\absolute);
+MidiCC([6, 11, ~mXone], ServerTarget(~sChannel3,\faderVolume), mode:\absolute);
+MidiCC([8, 11, ~mXone], ServerTarget(~sChannel2,\faderVolume), mode:\absolute);
+MidiCC([28, 11, ~mXone], ServerTarget(~sChannel4,\faderVolume), mode:\absolute);
 
 // channel que
-MidiButton([~mXone, 11, 10], ServerTarget(~sChannel1, \que), \toggle);
-MidiButton([~mXone, 11, 15], ServerTarget(~sChannel3, \que), \toggle);
-MidiButton([~mXone, 11, 25], ServerTarget(~sChannel2, \que), \toggle);
-MidiButton([~mXone, 11, 30], ServerTarget(~sChannel4, \que), \toggle);
+MidiButton([10, 11, ~mXone], ServerTarget(~sChannel1, \que), \toggle);
+MidiButton([15, 11, ~mXone], ServerTarget(~sChannel3, \que), \toggle);
+MidiButton([30, 11, ~mXone], ServerTarget(~sChannel4, \que), \toggle);
+MidiButton([25, 11, ~mXone], ServerTarget(~sChannel2, \que), \toggle);
 
 // channel crossfader switch
-MidiButton([~mXone, 11, 8], ServerTarget(~sChannel1, \crossfaderSelectorL));
-MidiButton([~mXone, 11, 9], ServerTarget(~sChannel1, \crossfaderSelectorR));
-MidiButton([~mXone, 11, 13], ServerTarget(~sChannel3, \crossfaderSelectorL));
-MidiButton([~mXone, 11, 14], ServerTarget(~sChannel3, \crossfaderSelectorR));
-MidiButton([~mXone, 11, 23], ServerTarget(~sChannel2, \crossfaderSelectorL));
-MidiButton([~mXone, 11, 24], ServerTarget(~sChannel2, \crossfaderSelectorR));
-MidiButton([~mXone, 11, 28], ServerTarget(~sChannel4, \crossfaderSelectorL));
-MidiButton([~mXone, 11, 29], ServerTarget(~sChannel4, \crossfaderSelectorR));
+MidiButton([8, 11, ~mXone], ServerTarget(~sChannel1, \crossfaderSelectorL));
+MidiButton([9, 11, ~mXone], ServerTarget(~sChannel1, \crossfaderSelectorR));
+MidiButton([13, 11, ~mXone], ServerTarget(~sChannel3, \crossfaderSelectorL));
+MidiButton([14, 11, ~mXone], ServerTarget(~sChannel3, \crossfaderSelectorR));
+MidiButton([23, 11, ~mXone], ServerTarget(~sChannel2, \crossfaderSelectorL));
+MidiButton([24, 11, ~mXone], ServerTarget(~sChannel2, \crossfaderSelectorR));
+MidiButton([28, 11, ~mXone], ServerTarget(~sChannel4, \crossfaderSelectorL));
+MidiButton([29, 11, ~mXone], ServerTarget(~sChannel4, \crossfaderSelectorR));
 
 // crossfader
-MidiCC([~mXone,11,13], ServerTarget(~sMixer,\crossFader), mode:\absolute);
+MidiCC([13, 11, ~mXone], ServerTarget(~sMixer, \crossFader), mode:\absolute);
 
 // MidiHidSystem
-MidiButton([~mBcr, 0, 60], BoolLangTarget(MidiHidSystem,\macroToggle));
-MidiButton([~mBcr, 0, 61], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivity));
-
+MidiButton.new([60, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\macroToggle));
+MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivity));
 
 // // DJ console
 // select playlist // for now you need to do this manually
-~libraryConsole.activeTrackArray = ~musicLibrary.playlists[2].asArray;
-~libraryConsole.filter(3);
+//~libraryConsole.activeTrackArray = ~musicLibrary.playlists[2].asArray;
+//~libraryConsole.filter(3);
 
-// browse tracks
+/* // browse tracks
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
 ~uNeedleDrop = false;
 MidiButton([], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangTarget does not support boolean objects themselves
@@ -69,3 +68,4 @@ MidiButton([], BoolLangTarget(~deck1, \loop), mode: \toggle);
 MidiCC([], BoolLangTarget(~deck1, \loopSize), mode: \forwardBackwardButton);
 
 
+ */

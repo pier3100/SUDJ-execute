@@ -1,10 +1,10 @@
 //input and output from JACK (from: Traktor, to: soundcard)
 SynthDef(\inputs, {
-    Out.ar(~bDeck1, FoaEncoderKernel.ar(In.ar(8,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck2, FoaEncoderKernel.ar(In.ar(10,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck3, FoaEncoderKernel.ar(In.ar(12,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck4, FoaEncoderKernel.ar(In.ar(14,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bPreview, FoaEncoderKernel.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
+    Out.ar(~bDeck1, FoaEncode.ar(In.ar(8,2), ~kernelEncoderStereo)); // make surround
+    Out.ar(~bDeck2, FoaEncode.ar(In.ar(10,2), ~kernelEncoderStereo)); // make surround
+    Out.ar(~bDeck3, FoaEncode.ar(In.ar(12,2), ~kernelEncoderStereo)); // make surround
+    Out.ar(~bDeck4, FoaEncode.ar(In.ar(14,2), ~kernelEncoderStereo)); // make surround
+    Out.ar(~bPreview, FoaEncode.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
 }).add;
 
 SynthDef(\outputs, {
@@ -20,10 +20,10 @@ SynthDef(\outputs, {
 }).add;
 
 //multichannel conversions
-SynthDef(\stereoToFoa { |bus|
+SynthDef(\stereoToFoa, { |bus|
     // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels
-    ReplaceOut.ar(bus, FoaEncoderKernel.ar(In.ar(bus,2), ~kernelEncoderStereo)); // make surround
-})
+    ReplaceOut.ar(bus, FoaEncode.ar(In.ar(bus,2), ~kernelEncoderStereo)); // make surround
+}).add;
 
 //channelmixer
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|

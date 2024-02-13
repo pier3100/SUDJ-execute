@@ -1,0 +1,1 @@
+s.latency = ((~kernelEncoderStereo.kernelSize - 1)/2 + ~kernelEncoderStereo.kernelSize - s.options.blockSize) / s.sampleRate; // assuming that in a DJdeck BufRd is in sync with the clock (delayed by EncoderKernel), the output of a DJdeck w

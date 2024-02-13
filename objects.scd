@@ -1,6 +1,6 @@
 //ableton link clock, and 1/16 clock
 c = LinkClock.new.latency_(s.latency);
-~c16th = TempoClock.new(c.tempo, 0, 0);
+//~c16th = TempoClock.new(c.tempo, 0, 0);
 
 //plc functionality
 ~mainPLC = PLC.new(1000);
@@ -31,12 +31,12 @@ c = LinkClock.new.latency_(s.latency);
 */
 
 //syncing the clocks
-~changeClockFunc = { |tempo|
-	c.tempo_(tempo);
-	~c16th.tempo_(tempo * 4);
-};
+//~changeClockFunc = { |tempo|
+//	c.tempo_(tempo);
+//	~c16th.tempo_(tempo * 4);
+//};
 
-~mainPLC.add({ ~c16th.beats_(c.beats * 4) }); 
+//~mainPLC.add({ ~c16th.beats_(c.beats * 4) }); 
 //~syncClock_func.value; //sync now
 //~syncClock_controller = SimpleController(c); //sync in the future
 //~syncClock_controller.put(\tempo, ~syncClock_func);
@@ -44,9 +44,9 @@ c = LinkClock.new.latency_(s.latency);
 
 
 //clock integrator
-~tempoIntegrator = ClockedIntegrator(1 / ~mainPLC.tempo);
+/* ~tempoIntegrator = ClockedIntegrator(1 / ~mainPLC.tempo);
 ~tempoIntegrator.value_(c.tempo); //the slope of the tempoIntegrator is set from a know, as described in physicalInterfaces
-~mainPLC.add({ c.tempo_(~tempoIntegrator.next) }); 
+~mainPLC.add({ c.tempo_(~tempoIntegrator.next) });  */
 
 // start library console
 ~libraryConsole = LibraryConsole.new(~prelistenDeck);
