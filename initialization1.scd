@@ -1,8 +1,9 @@
 // load configuration
 Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-execute\\config.JSON");
 
-// load musicLibrary
-~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
+// music library
+k = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
+~musicLibrary = k;
 
 //buffer
 b = Buffer.alloc(s,44100,1);

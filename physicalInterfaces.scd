@@ -36,16 +36,18 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 
 // // DJ console
 // select playlist // for now you need to do this manually
-//~libraryConsole.activeTrackArray = ~musicLibrary.playlists[2].asArray;
-//~libraryConsole.filter(3);
+~libraryConsole.activeTrackArray = ~musicLibrary.playlists[12].asArray;
+~libraryConsole.filter(4);
 
-/* // browse tracks
+// browse tracks
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
-~uNeedleDrop = false;
-MidiButton([], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangTarget does not support boolean objects themselves
-MidiCC([], BoolLangTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: ~uNeedleDrop.not);
-MidiCC([], ContinuousLangTarget(~prelistenDeck, \needledropping), mode: \relative, , active: ~uNeedleDrop);
+//MidiButton([18, 11, ~mXone], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangTarget does not support boolean objects themselves
+MidiButton([18, 11, ~mXone], BoolLangTarget(~prelistenDeck, \playPause), mode: \push);
+m = MidiCC([33, 11, ~mXone], BoolLangTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
+c= ContinuousLangTarget(~prelistenDeck, \needledropping);
+MidiCC([33, 11, ~mXone], c , mode: \relative, active: { ~prelistenDeck.playPause });
 
+/*
 // // DJ deck
 // loadTrack
 MidiButton([],{ ~deck1.loadDoubleAndPlay(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct);

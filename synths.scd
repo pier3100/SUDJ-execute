@@ -6,6 +6,7 @@
 ~gChannel4 = Group.new(~gChannels, \addToHead);
 ~gPreview = Group.new(~gChannels, \addToHead);
 ~prelistenDeck = DJdeck.new(~bPreview, ~gPreview);
+~prelistenDeck.synth.set(\volume, 1);
 ~deck1 = DJdeck.new(~bDeck1, ~gChannel1);
 ~deck2 = DJdeck.new(~bDeck2, ~gChannel2);
 ~deck3 = DJdeck.new(~bDeck3, ~gChannel3);

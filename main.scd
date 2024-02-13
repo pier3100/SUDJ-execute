@@ -29,11 +29,7 @@ Routine.run {
 	"physicalInterfaces.scd".loadRelative;
 }
 )
-h = true
-h.toggle
-// enable system for midifeedback, how to forward the global enable flag to the subcomponents; we should not overwrite the object
-
 //closing
 (
-    //~musicLibrary.store;
+ ~musicLibrary.store(Library.at(\musicLibraryPath));
 )
