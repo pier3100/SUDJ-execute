@@ -30,6 +30,7 @@ Routine.run {
 }
 )
 //closing
-(
- ~musicLibrary.store(Library.at(\musicLibraryPath));
+( // use doOnShutDown
+~musicLibrary.store(Library.at(\musicLibraryPath));
+~log.close;
 )

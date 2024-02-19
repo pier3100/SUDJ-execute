@@ -1,8 +1,11 @@
 // naming
-~mXone = MidiInOutPair("XoneDX-SuperCollider");
+~mXone = MidiInOutPair("XoneDX-SuperCollider","SuperCollider-XoneDX");
 ~mBcr = MidiInOutPair("BCR2000-SuperCollider","SuperCollider-BCR2000");
 
+// shift
 ~uShift = false; // global shift button modifier; we use the u to indicate a user input modifier
+MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct);
+MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct);
 
 // midi xone
 // channel faders
@@ -43,24 +46,26 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
 //MidiButton([18, 11, ~mXone], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangTarget does not support boolean objects themselves
 MidiButton([18, 11, ~mXone], BoolLangTarget(~prelistenDeck, \playPause), mode: \push);
-m = MidiCC([33, 11, ~mXone], BoolLangTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
-c= ContinuousLangTarget(~prelistenDeck, \needledropping);
-MidiCC([33, 11, ~mXone], c , mode: \relative, active: { ~prelistenDeck.playPause });
+MidiCC([33, 11, ~mXone], BoolLangTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
+MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
 
-/*
 // // DJ deck
 // loadTrack
-MidiButton([],{ ~deck1.loadDoubleAndPlay(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct);
+MidiButton([22, 12, ~mXone],{ ~deck1.loadAndPlayDouble(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct);
+
 //play
-MidiButton([], BoolLangTarget(~deck1, \playPause), mode: \toggle);
+MidiButton([19, 12, ~mXone], BoolLangTarget(~deck1, \playPause), mode: \toggle);
+
 //que
-MidiButton([], { ~deck1.que }, mode: \direct);
+MidiButton([20, 12, ~mXone], { ~deck1.que }, mode: \direct);
 //jogwheel
-MidiCC([], ContinuousLangTarget(~deck1, \pitchbend), mode: \forwardBackwardButton);
+MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
+MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping) , mode: \relative, active: { ~uShift });
+~deck1.sync;
 //sync
-~syncLongPressDeck1 = false;
-MidiButton([], { ~deck1.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck1.sync_(~deck1.sync.not) }}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
-//tempo
+m = MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck1.sync_(~deck1.sync.not) }}, targetOut: {~deck1.sync}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
+//m.targetOut.value
+/*//tempo
 MidiCC([], ContinuousLangTarget(~deck1, \tempo), mode: \relative, constrained: false);
 //beatjump
 MidiButton([], {~deck1.beatJump(-8)}, mode: \direct); // we could also make this a toggle, that way you can cancel the scheduled beatJump, which would require us to use a DynamicTask

@@ -1,6 +1,9 @@
 // load configuration
 Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-execute\\config.JSON");
 
+// start logger
+Log.new(Library.at(\logPath));
+
 // music library
 k = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
 ~musicLibrary = k;
