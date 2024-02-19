@@ -29,7 +29,7 @@ r.prepareForRecord(numChannels:2);
 ~speakerDbsCorrection = [0, 0, 0, 4, 0, 4]; //In a free field - a doubling of the distance from a noise source reduces the sound pressure level with 6 decibel.
 ~matrixDecoderMain = FoaDecoderMatrix.newDiametric(~speakerDegrees.degrad, k: 'single');
 ~matrixDecoderHeads = FoaDecoderMatrix.newStereo;
-~kernelEncoderStereo = FoaEncoderKernel.newSuper(2048);
+~kernelEncoderStereo = FoaEncoderKernel.newSuper(8192);
 ~numberChannels = ~kernelEncoderStereo.numOutputs;
 
 // calculate delay in seconds, and set server latency accordingly

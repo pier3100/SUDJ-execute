@@ -30,6 +30,10 @@ SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfade
     var input, output, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
 	output = FoaRotate.ar(input, angle: ServerControlLag.kr(\pan,0.5).linlin(0,1,-pi,pi)); // surround panner
+    // EQ
+    output = VSTPlugin.ar(output, 3, params: [4, ServerControlLag.kr(\lowGain, 0.5), 5, ServerControlLag.kr(\midGain, 0.5), 6, ServerControlLag.kr(\highGain, 0.5)]);
+    output = DjFilter.ar(output, ServerControlLag.kr(\filter, 0.5));
+    // Sends
     Out.ar(~bSend1,     output * VolumeFaderCurve.kr(ServerControlLag.kr(\send1Volume)));
     Out.ar(~bSend2,     output * VolumeFaderCurve.kr(ServerControlLag.kr(\send2Volume)));
     Out.ar(~bSend3,     output * VolumeFaderCurve.kr(ServerControlLag.kr(\send3Volume)));
