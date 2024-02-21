@@ -25,3 +25,10 @@ Stethoscope.new
 ~prelistenDeck.synth.trace
 ~prelistenDeck.clock.fallbackTempo_(2)
 ~prelistenDeck.clock.fallbackTempo
+
+Trig
+
+(b = Bus.control;
+b.getSynchronous.postln;
+)
+false.not.not
