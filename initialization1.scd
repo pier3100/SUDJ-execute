@@ -5,8 +5,7 @@ Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-execute\
 Log.new(Library.at(\logPath));
 
 // music library
-k = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
-~musicLibrary = k;
+~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
 
 //buffer
 b = Buffer.alloc(s,44100,1);

@@ -6,12 +6,11 @@
 ~gChannel4 = Group.new(~gChannels, \addToHead);
 ~gPreview = Group.new(~gChannels, \addToHead);
 ~prelistenDeck = DJdeck.new(~bPreview, ~gPreview, deckNr: "pre");
-~prelistenDeck.synth.set(\volume, 1);
 ~deck1 = DJdeck.new(~bDeck1, ~gChannel1, deckNr: 1);
 ~deck2 = DJdeck.new(~bDeck2, ~gChannel2, deckNr: 2);
 ~deck3 = DJdeck.new(~bDeck3, ~gChannel3, deckNr: 3);
 ~deck4 = DJdeck.new(~bDeck4, ~gChannel4, deckNr: 4);
-Synth.tail(~gPreview, \stereoToFoa, [\bus, ~bPreview]);
+~foa1 = Synth.tail(~gPreview, \stereoToFoa, [\bus, ~bPreview]);
 Synth.tail(~gChannel1, \stereoToFoa, [\bus, ~bDeck1]);
 Synth.tail(~gChannel2, \stereoToFoa, [\bus, ~bDeck2]);
 Synth.tail(~gChannel3, \stereoToFoa, [\bus, ~bDeck3]);

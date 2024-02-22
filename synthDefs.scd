@@ -1,10 +1,10 @@
 //input and output from JACK (from: Traktor, to: soundcard)
 SynthDef(\inputs, {
-    Out.ar(~bDeck1, FoaEncode.ar(In.ar(8,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck2, FoaEncode.ar(In.ar(10,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck3, FoaEncode.ar(In.ar(12,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bDeck4, FoaEncode.ar(In.ar(14,2), ~kernelEncoderStereo)); // make surround
-    Out.ar(~bPreview, FoaEncode.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
+    //Out.ar(, FoaEncode.ar(In.ar(8,2), ~kernelEncoderStereo)); // make surround
+    //Out.ar(, FoaEncode.ar(In.ar(10,2), ~kernelEncoderStereo)); // make surround
+    //Out.ar(, FoaEncode.ar(In.ar(12,2), ~kernelEncoderStereo)); // make surround
+    //Out.ar(, FoaEncode.ar(In.ar(14,2), ~kernelEncoderStereo)); // make surround
+    //Out.ar(, FoaEncode.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
 }).add;
 
 SynthDef(\outputs, {
@@ -22,16 +22,23 @@ SynthDef(\outputs, {
 //multichannel conversions
 SynthDef(\stereoToFoa, { |bus|
     // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels
-    ReplaceOut.ar(bus, FoaEncode.ar(In.ar(bus,2), ~kernelEncoderStereo)); // make surround
+    var foa;
+    foa = FoaEncode.ar(In.ar(bus, 2), ~kernelEncoderStereo); // make surround
+    ReplaceOut.ar(bus, [foa[0], foa[1], foa[2]]); //output, and ignore fourth empty channel
 }).add;
 
 //channelmixer
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|
-    var input, output, outputPostFader;
+    var input, output, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
 	output = FoaRotate.ar(input, angle: ServerControlLag.kr(\pan,0.5).linlin(0,1,-pi,pi)); // surround panner
     // EQ
-    output = VSTPlugin.ar(output, 3, params: [4, ServerControlLag.kr(\lowGain, 0.5), 5, ServerControlLag.kr(\midGain, 0.5), 6, ServerControlLag.kr(\highGain, 0.5)]);
+    lowGain = ServerControlLag.kr(\lowGain, 0.5);
+    midGain = ServerControlLag.kr(\midGain, 0.5);
+    highGain = ServerControlLag.kr(\highGain, 0.5);
+    vst1 = VSTPlugin.ar([output[0], output[1]], 2, params: [4, lowGain, 5, midGain, 6, highGain], id: \eq3vst1);
+    vst2 = VSTPlugin.ar(output[2], 1, params: [4, lowGain, 5, midGain, 6, highGain], id: \eq3vst2);
+    output = [vst1[0], vst1[1], vst2];
     output = DjFilter.ar(output, ServerControlLag.kr(\filter, 0.5));
     // Sends
     Out.ar(~bSend1,     output * VolumeFaderCurve.kr(ServerControlLag.kr(\send1Volume)));
@@ -52,7 +59,7 @@ SynthDef(\mainMixer, {
     output = output + In.ar(~bCrossBypass, ~numberChannels);
     output = output + In.ar(~bSend1, ~numberChannels) + In.ar(~bSend2, ~numberChannels) + In.ar(~bSend3, ~numberChannels);// add sends
     Out.ar(~bOutMain, output);//all seperate channels have allready been added, we only need to add the send
-    Out.ar(~bOutHeads,In.ar(~bPreview, ~numberChannels));
+    Out.ar(~bOutHeads, In.ar(~bPreview, ~numberChannels));
 }).add;
 
 //vst
