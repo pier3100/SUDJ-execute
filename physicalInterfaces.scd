@@ -4,8 +4,8 @@
 
 // shift
 ~uShift = false; // global shift button modifier; we use the u to indicate a user input modifier
-MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct);
-MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct);
+MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
+MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 
 // midi xone
 // eq
@@ -69,6 +69,8 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 MidiButton([18, 11, ~mXone], BoolLangTarget(~prelistenDeck, \playPause), mode: \push);
 MidiCC([33, 11, ~mXone], BoolLangTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
 MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
+MidiButton([36, 11, ~mXone], BoolLangTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
 
 // // DJ deck
 // deck1
@@ -82,7 +84,8 @@ MidiButton([20, 12, ~mXone], { ~deck1.que }, mode: \direct);
 MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
-MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck1.sync_(~deck1.sync.not) }}, targetOut: {~deck1.sync}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
+MidiButton([7, 12, ~mXone], BoolLangTarget(~deck1, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 12, ~mXone], ContinuousLangTarget(~deck1, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -103,7 +106,8 @@ MidiButton([20, 13, ~mXone], { ~deck2.que }, mode: \direct);
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
-MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck2.sync_(~deck2.sync.not) }}, targetOut: {~deck2.sync}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
+MidiButton([7, 13, ~mXone], BoolLangTarget(~deck2, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -124,7 +128,8 @@ MidiButton([20, 14, ~mXone], { ~deck3.que }, mode: \direct);
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
-MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck3.sync_(~deck3.sync.not) }}, targetOut: {~deck3.sync}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
+MidiButton([7, 14, ~mXone], BoolLangTarget(~deck3, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -145,7 +150,8 @@ MidiButton([20, 15, ~mXone], { ~deck4.que }, mode: \direct);
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
-MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster }, { |val, longPress| if(longPress.not){ ~deck4.sync_(~deck4.sync.not) }}, targetOut: {~deck4.sync}, mode: \direct, delay: 0.3 );//on long press set as master (this includes engaging sync), on short press toggle sync
+MidiButton([7, 15, ~mXone], BoolLangTarget(~deck4, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode: \relative);
 //beatjump
