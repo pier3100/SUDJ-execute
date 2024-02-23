@@ -31,7 +31,10 @@ SynthDef(\stereoToFoa, { |bus|
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|
     var input, output, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
-	output = FoaRotate.ar(input, angle: ServerControlLag.kr(\pan,0.5).linlin(0,1,-pi,pi)); // surround panner
+    output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -6, 6).dbamp; // -6 to +6 gain
+	output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5));
+    output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
+    
     // EQ
     lowGain = ServerControlLag.kr(\lowGain, 0.5);
     midGain = ServerControlLag.kr(\midGain, 0.5);

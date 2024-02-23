@@ -160,3 +160,24 @@ MidiButton([13, 15, ~mXone], {~deck4.beatJump(8)}, mode: \direct);
 //loop
 MidiButton([1, 15, ~mXone], BoolLangTarget(~deck4, \loop), mode: \toggle);
 MidiCC([35, 15, ~mXone], BoolLangTarget(~deck4, \loopSize), mode: \forwardBackwardButton);
+
+// bcr
+// channel 1
+MidiCC([81, 0, ~mBcr], ServerTarget(~sChannel1, \pan));
+MidiCC([89, 0, ~mBcr], ServerTarget(~sChannel1, \push), mode: \absolute);
+MidiCC([97, 0, ~mBcr], ServerTarget(~sChannel1, \gain), mode: \absolute);
+
+// channel 2
+MidiCC([82, 0, ~mBcr], ServerTarget(~sChannel2, \pan));
+MidiCC([90, 0, ~mBcr], ServerTarget(~sChannel2, \push), mode: \absolute);
+MidiCC([98, 0, ~mBcr], ServerTarget(~sChannel2, \gain), mode: \absolute);
+
+// channel 3
+MidiCC([83, 0, ~mBcr], ServerTarget(~sChannel3, \pan));
+MidiCC([91, 0, ~mBcr], ServerTarget(~sChannel3, \push), mode: \absolute);
+MidiCC([99, 0, ~mBcr], ServerTarget(~sChannel3, \gain), mode: \absolute);
+
+// channel 4
+MidiCC([84, 0, ~mBcr], ServerTarget(~sChannel4, \pan));
+MidiCC([92, 0, ~mBcr], ServerTarget(~sChannel4, \push), mode: \absolute);
+MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
