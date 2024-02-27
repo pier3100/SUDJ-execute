@@ -1,3 +1,8 @@
+/*
+TODO:
+- when loading a new track, also reset the gain to 0dB; this requires a modification to MidiHid
+*/
+
 // naming
 ~mXone = MidiInOutPair("XoneDX-SuperCollider","SuperCollider-XoneDX");
 ~mBcr = MidiInOutPair("BCR2000-SuperCollider","SuperCollider-BCR2000");
@@ -79,6 +84,10 @@ MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster }, targetOut: { ~preli
 // deck1
 // loadTrack
 MidiButton([22, 12, ~mXone],{ ~deck1.loadAndPlayDouble(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct);
+
+//
+//MidiButton([22, 12, ~mXone],{ ~sChannel1~deck1.loadAndPlayDouble(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct, active: { ~deck1.playPause.not });
+
 //play
 MidiButton([19, 12, ~mXone], BoolLangTarget(~deck1, \playPause), mode: \toggle);
 //que
@@ -94,6 +103,8 @@ MidiCC([36, 12, ~mXone], ContinuousLangTarget(~deck1, \tempo, clip: false), mode
 //beatjump
 MidiButton([3, 12, ~mXone], {~deck1.beatJump(-8)}, mode: \direct); // we could also make this a toggle, that way you can cancel the scheduled beatJump, which would require us to use a DynamicTask
 MidiButton([13, 12, ~mXone], {~deck1.beatJump(8)}, mode: \direct);
+MidiButton([2, 12, ~mXone], {~deck1.beatJump(-1)}, mode: \direct);
+MidiButton([12, 12, ~mXone], {~deck1.beatJump(1)}, mode: \direct);
 //loop
 MidiButton([1, 12, ~mXone], BoolLangTarget(~deck1, \loop), mode: \toggle);
 MidiCC([35, 12, ~mXone], BoolLangTarget(~deck1, \loopSize), mode: \forwardBackwardButton);
@@ -116,6 +127,8 @@ MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode
 //beatjump
 MidiButton([3, 13, ~mXone], {~deck2.beatJump(-8)}, mode: \direct); // we could also make this a toggle, that way you can cancel the scheduled beatJump, which would require us to use a DynamicTask
 MidiButton([13, 13, ~mXone], {~deck2.beatJump(8)}, mode: \direct);
+MidiButton([2, 13, ~mXone], {~deck2.beatJump(-1)}, mode: \direct);
+MidiButton([12, 13, ~mXone], {~deck2.beatJump(1)}, mode: \direct);
 //loop
 MidiButton([1, 13, ~mXone], BoolLangTarget(~deck2, \loop), mode: \toggle);
 MidiCC([35, 13, ~mXone], BoolLangTarget(~deck2, \loopSize), mode: \forwardBackwardButton);
@@ -138,6 +151,8 @@ MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode
 //beatjump
 MidiButton([3, 14, ~mXone], {~deck3.beatJump(-8)}, mode: \direct); // we could also make this a toggle, that way you can cancel the scheduled beatJump, which would require us to use a DynamicTask
 MidiButton([13, 14, ~mXone], {~deck3.beatJump(8)}, mode: \direct);
+MidiButton([2, 14, ~mXone], {~deck3.beatJump(-1)}, mode: \direct);
+MidiButton([12, 14, ~mXone], {~deck3.beatJump(1)}, mode: \direct);
 //loop
 MidiButton([1, 14, ~mXone], BoolLangTarget(~deck3, \loop), mode: \toggle);
 MidiCC([35, 14, ~mXone], BoolLangTarget(~deck3, \loopSize), mode: \forwardBackwardButton);
@@ -160,6 +175,8 @@ MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode
 //beatjump
 MidiButton([3, 15, ~mXone], {~deck4.beatJump(-8)}, mode: \direct); // we could also make this a toggle, that way you can cancel the scheduled beatJump, which would require us to use a DynamicTask
 MidiButton([13, 15, ~mXone], {~deck4.beatJump(8)}, mode: \direct);
+MidiButton([2, 15, ~mXone], {~deck4.beatJump(-1)}, mode: \direct);
+MidiButton([12, 15, ~mXone], {~deck4.beatJump(1)}, mode: \direct);
 //loop
 MidiButton([1, 15, ~mXone], BoolLangTarget(~deck4, \loop), mode: \toggle);
 MidiCC([35, 15, ~mXone], BoolLangTarget(~deck4, \loopSize), mode: \forwardBackwardButton);
