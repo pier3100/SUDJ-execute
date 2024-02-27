@@ -5,7 +5,9 @@
 // shift
 ~uShift = false; // global shift button modifier; we use the u to indicate a user input modifier
 MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
+MidiButton([16, 13, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
+MidiButton([16, 15, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 
 // midi xone
 // eq
@@ -61,7 +63,8 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 // // DJ console
 // select playlist // for now you need to do this manually
 ~libraryConsole.activeTrackArray = ~musicLibrary.playlists[12].asArray;
-~libraryConsole.filter(4);
+~libraryConsole.activeTrackArray = ~musicLibrary.findPlaylistByTitle("beatsync")[0].asArray;
+~libraryConsole.filter(3);
 
 // browse tracks
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
