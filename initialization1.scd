@@ -28,8 +28,9 @@ r.prepareForRecord(numChannels:2);
 ~speakerDbsCorrection = [0, 0, 0, 4, 0, 4]; //In a free field - a doubling of the distance from a noise source reduces the sound pressure level with 6 decibel.
 ~matrixDecoderMain = FoaDecoderMatrix.newDiametric(~speakerDegrees.degrad, k: 'single');
 ~matrixDecoderHeads = FoaDecoderMatrix.newStereo;
-~kernelEncoderStereo = FoaEncoderKernel.newSuper(8192);
-~numberChannels = ~kernelEncoderStereo.numOutputs;
+~kernelEncoderSuperStereo = FoaEncoderKernel.newSuper(8192);
+~matrixEncoderStereo = FoaEncoderMatrix.newStereo;
+~numberChannels = ~kernelEncoderSuperStereo.numOutputs;
 
 // calculate delay in seconds, and set server latency accordingly
 //s.latency = ((~kernelEncoderStereo.kernelSize - 1)/2 + ~kernelEncoderStereo.kernelSize - s.options.blockSize) / s.sampleRate; // assuming that in a DJdeck BufRd is in sync with the clock (delayed by EncoderKernel), the output of a DJdeck will be in sync with patterns (delayed by server communication with latency parameter)

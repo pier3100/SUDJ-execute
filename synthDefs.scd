@@ -20,10 +20,18 @@ SynthDef(\outputs, {
 }).add;
 
 //multichannel conversions
-SynthDef(\stereoToFoa, { |bus|
-    // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels
+SynthDef(\superStereoToFoa, { |bus|
+    // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels 
+    // this induces a lag, see documentation of kernelEncoder, we take this into account be letting the patterns (which use stereo) run later than the tracks (which use superStereo)
     var foa;
-    foa = FoaEncode.ar(In.ar(bus, 2), ~kernelEncoderStereo); // make surround
+    foa = FoaEncode.ar(In.ar(bus, 2), ~kernelEncoderSuperStereo); // make surround
+    ReplaceOut.ar(bus, [foa[0], foa[1], foa[2]]); //output, and ignore fourth empty channel
+}).add;
+
+SynthDef(\stereoToFoa, { |bus|
+    // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels 
+    var foa;
+    foa = FoaEncode.ar(In.ar(bus, 2), ~matrixEncoderStereo); // make surround
     ReplaceOut.ar(bus, [foa[0], foa[1], foa[2]]); //output, and ignore fourth empty channel
 }).add;
 

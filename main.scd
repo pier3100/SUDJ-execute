@@ -10,7 +10,7 @@ Routine.run {
 	s.sync;
 	"synths.scd".loadRelative;
 	s.sync;
-	"objects.scd".loadRelative;
+	"initialization3.scd".loadRelative;
 	s.sync;
 	"vstControllers.scd".loadRelative;
 	s.sync;

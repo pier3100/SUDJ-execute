@@ -3,6 +3,7 @@
 ~bDeck2 = Bus.audio(s,~numberChannels);
 ~bDeck3 = Bus.audio(s,~numberChannels);
 ~bDeck4 = Bus.audio(s,~numberChannels);
+~bDrumMachine = Bus.audio(s,~numberChannels);
 ~bPreview = Bus.audio(s,~numberChannels);
 ~bSend1 = Bus.audio(s,~numberChannels);
 ~bSend2 = Bus.audio(s,~numberChannels);
