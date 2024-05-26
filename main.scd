@@ -15,5 +15,7 @@ Routine.run {
 	"vstControllers.scd".loadRelative;
 	s.sync;
 	"physicalInterfaces.scd".loadRelative;
+	s.sync;
+	"closeOut.scd".loadRelative;
 }
 )

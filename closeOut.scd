@@ -1,0 +1,1 @@
+"SUDJ succesfully booted".log;
