@@ -201,3 +201,17 @@ MidiCC([99, 0, ~mBcr], ServerTarget(~sChannel3, \gain), mode: \absolute);
 MidiCC([84, 0, ~mBcr], ServerTarget(~sChannel4, \pan));
 MidiCC([92, 0, ~mBcr], ServerTarget(~sChannel4, \push), mode: \absolute);
 MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
+
+// barcodeScanner
+~barcodeScanner = HID.open(3118, 2823, "\\\\?\\hid#vid_0c2e&pid_0b07&mi_00#8&12aced56&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}");
+~barcodeSource = HidSource(4,~barcodeScanner);
+HidValRaw(~barcodeSource, {|valRaw| 
+    var valRawString, playlist;
+    valRawString = valRaw.asString;
+    // we check whether the barcode refers to a playlist (meaning the first digit is 1)
+    if(valRawString[0].digit == 1){
+        playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
+        ~libraryConsole.activeTrackArray_(playlist.asArray);
+        "playlist % loaded to libraryConsole by barcode".format(playlist.name).log(HidValRaw);
+    }
+});
