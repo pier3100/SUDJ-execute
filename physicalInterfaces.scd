@@ -6,15 +6,18 @@ TODO:
 // naming
 ~mXone = MidiInOutPair("XoneDX-SuperCollider","SuperCollider-XoneDX");
 ~mBcr = MidiInOutPair("BCR2000-SuperCollider","SuperCollider-BCR2000");
+~mLaunchPad = MidiInOutPair("MIDIIN2 (LPMiniMK3 MIDI)","MIDIOUT2 (LPMiniMK3 MIDI)", [240, 0, 32, 41, 2, 13, 14, 1, 247], [45, 21]); // we send the sysex message to change to programmer mode
 
+// novation launchpad
+
+
+// midi xone
 // shift
 ~uShift = false; // global shift button modifier; we use the u to indicate a user input modifier
 MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 MidiButton([16, 13, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
 MidiButton([16, 15, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
-
-// midi xone
 // eq
 MidiCC([1, 11, ~mXone], ServerTarget(~sChannel1,\highGain), mode:\absolute);
 MidiCC([2, 11, ~mXone], ServerTarget(~sChannel1,\midGain), mode:\absolute);
@@ -67,9 +70,9 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 
 // // DJ console
 // select playlist // for now you need to do this manually
-~libraryConsole.activeTrackArray = ~musicLibrary.playlists[12].asArray;
-~libraryConsole.activeTrackArray = ~musicLibrary.findPlaylistByTitle("beatsync")[0].asArray;
-~libraryConsole.filter(3);
+~libraryConsole.loadPlaylist(~musicLibrary.playlists.at("$ROOT".asSymbol, \E2, \Trance));
+//~libraryConsole.activeTrackArray = ~musicLibrary.findPlaylistByTitle("beatsync")[0].asArray;
+//~libraryConsole.filter(3);
 
 // browse tracks
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
@@ -211,7 +214,15 @@ HidValRaw(~barcodeSource, {|valRaw|
     // we check whether the barcode refers to a playlist (meaning the first digit is 1)
     if(valRawString[0].digit == 1){
         playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
-        ~libraryConsole.activeTrackArray_(playlist.asArray);
+        ~libraryConsole.loadPlaylist(playlist);
         "playlist % loaded to libraryConsole by barcode".format(playlist.name).log(HidValRaw);
     }
-});
+}); 
+
+//launchpad
+//MidiCC([98, 0, ~mLaunchPad], {MidiHidSystem.instanceList.do({ |item| if(item.class == MidiButton){ if(item.source.midiDevice === ~mLaunchPad && item.targetOut.isNil.not){ item.feedback } } })}, mode: \forwardBackwardButton); // we resend all midi data because it might be lost at the moment we switched screens on the launchpad
+MidiButton([81, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(1)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 1});
+MidiButton([82, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(2)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 2});
+MidiButton([83, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(3)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 3});
+MidiButton([84, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(4)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 4});
+MidiButton([85, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(5)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 5});

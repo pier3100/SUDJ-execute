@@ -1,5 +1,5 @@
 // start library console
-~libraryConsole = LibraryConsole.new(~prelistenDeck);
+~libraryConsole = LibraryConsole.new(~prelistenDeck, c);
 
 // set master clock
 ~prelistenDeck.clock.master = c; // there is one standard master clock
