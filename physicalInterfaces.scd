@@ -94,7 +94,8 @@ MidiButton([22, 12, ~mXone],{ ~deck1.loadAndPlayDouble(~prelistenDeck); ~library
 //play
 MidiButton([19, 12, ~mXone], BoolLangTarget(~deck1, \playPause), mode: \toggle);
 //que
-MidiButton([20, 12, ~mXone], { ~deck1.que }, mode: \direct);
+MidiButton([20, 12, ~mXone], { ~deck1.que }, mode: \direct, active: { ~uShift.not });
+MidiButton([20, 12, ~mXone], { ~deck1.phraseQue }, mode: \direct, active: { ~uShift });
 //jogwheel
 MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping) , mode: \relative, active: { ~uShift });
@@ -118,7 +119,8 @@ MidiButton([22, 13, ~mXone],{ ~deck2.loadAndPlayDouble(~prelistenDeck); ~library
 //play
 MidiButton([19, 13, ~mXone], BoolLangTarget(~deck2, \playPause), mode: \toggle);
 //que
-MidiButton([20, 13, ~mXone], { ~deck2.que }, mode: \direct);
+MidiButton([20, 13, ~mXone], { ~deck2.que }, mode: \direct, active: { ~uShift.not });
+MidiButton([20, 13, ~mXone], { ~deck2.phraseQue }, mode: \direct, active: { ~uShift });
 //jogwheel
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping) , mode: \relative, active: { ~uShift });
@@ -142,7 +144,8 @@ MidiButton([22, 14, ~mXone],{ ~deck3.loadAndPlayDouble(~prelistenDeck); ~library
 //play
 MidiButton([19, 14, ~mXone], BoolLangTarget(~deck3, \playPause), mode: \toggle);
 //que
-MidiButton([20, 14, ~mXone], { ~deck3.que }, mode: \direct);
+MidiButton([20, 14, ~mXone], { ~deck3.que }, mode: \direct, active: { ~uShift.not });
+MidiButton([20, 14, ~mXone], { ~deck3.phraseQue }, mode: \direct, active: { ~uShift });
 //jogwheel
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping) , mode: \relative, active: { ~uShift });
@@ -166,7 +169,8 @@ MidiButton([22, 15, ~mXone],{ ~deck4.loadAndPlayDouble(~prelistenDeck); ~library
 //play
 MidiButton([19, 15, ~mXone], BoolLangTarget(~deck4, \playPause), mode: \toggle);
 //que
-MidiButton([20, 15, ~mXone], { ~deck4.que }, mode: \direct);
+MidiButton([20, 15, ~mXone], { ~deck4.que }, mode: \direct, active: { ~uShift.not });
+MidiButton([20, 15, ~mXone], { ~deck4.phraseQue }, mode: \direct, active: { ~uShift });
 //jogwheel
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \pitchbend, clip: false), mode: \forwardBackwardButton, active: { ~uShift.not });
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping) , mode: \relative, active: { ~uShift });
@@ -220,9 +224,18 @@ HidValRaw(~barcodeSource, {|valRaw|
 }); 
 
 //launchpad
-//MidiCC([98, 0, ~mLaunchPad], {MidiHidSystem.instanceList.do({ |item| if(item.class == MidiButton){ if(item.source.midiDevice === ~mLaunchPad && item.targetOut.isNil.not){ item.feedback } } })}, mode: \forwardBackwardButton); // we resend all midi data because it might be lost at the moment we switched screens on the launchpad
-MidiButton([81, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(1)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 1});
-MidiButton([82, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(2)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 2});
-MidiButton([83, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(3)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 3});
-MidiButton([84, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(4)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 4});
-MidiButton([85, 0, ~mLaunchPad], {~libraryConsole.tempoFilter_(5)}, mode: \direct, targetOut: {~libraryConsole.tempoFilter == 5});
+MidiButton([81, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoFilter, clip: false), mode: \direct, buttonValue: 1);
+MidiButton([82, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoFilter, clip: false), mode: \direct, buttonValue: 2);
+MidiButton([83, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoFilter, clip: false), mode: \direct, buttonValue: 3);
+MidiButton([84, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoFilter, clip: false), mode: \direct, buttonValue: 4);
+MidiButton([85, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoFilter, clip: false), mode: \direct, buttonValue: 5);
+MidiButton([71, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoMultiplier, clip: false), mode: \direct, buttonValue: 0.5);
+MidiButton([72, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoMultiplier, clip: false), mode: \direct, buttonValue: 1);
+MidiButton([73, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \tempoMultiplier, clip: false), mode: \direct, buttonValue: 2);
+MidiButton([61, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \keyFilter, clip: false), mode: \direct, buttonValue: 1);
+MidiButton([62, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \keyFilter, clip: false), mode: \direct, buttonValue: 2);
+MidiButton([63, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \keyFilter, clip: false), mode: \direct, buttonValue: 3);
+MidiButton([64, 0, ~mLaunchPad], ContinuousLangTarget(~libraryConsole, \keyFilter, clip: false), mode: \direct, buttonValue: 4);
+
+// we turn off automatic midi feedback
+MidiHidSystem.enabled_(false);
