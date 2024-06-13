@@ -6,6 +6,13 @@ Log.new(Library.at(\logPath));
 
 // music library
 ~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
+~musicLibrary.addPseudoPlaylist("E1", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E1".asSymbol));
+~musicLibrary.addPseudoPlaylist("E2", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E2".asSymbol));
+~musicLibrary.addPseudoPlaylist("E3", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E3".asSymbol));
+~musicLibrary.addPseudoPlaylist("E4", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E4".asSymbol));
+~musicLibrary.addPseudoPlaylist("E5", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E5".asSymbol));
+~musicLibrary.playlists.put("$ROOT".asSymbol, \Custom, \All, Playlist.new("All", Array.series(~musicLibrary.tracks.size, 0, 1)));
+~musicLibrary.barcodeDictionary_;
 
 //buffer
 b = Buffer.alloc(s,44100,1);

@@ -70,7 +70,7 @@ MidiButton([61, 0, ~mBcr], BoolLangTarget(MidiHidSystem,\activateGlobalSensitivi
 
 // // DJ console
 // select playlist // for now you need to do this manually
-~libraryConsole.loadPlaylist(~musicLibrary.playlists.at("$ROOT".asSymbol, \E2, \Trance));
+~libraryConsole.loadPlaylist(~musicLibrary.playlists.at("$ROOT".asSymbol, \Custom, \All));
 //~libraryConsole.activeTrackArray = ~musicLibrary.findPlaylistByTitle("beatsync")[0].asArray;
 //~libraryConsole.filter(3);
 
