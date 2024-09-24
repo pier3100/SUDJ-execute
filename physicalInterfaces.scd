@@ -101,7 +101,8 @@ MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \pitchbend, clip: false), 
 MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
 MidiButton([7, 12, ~mXone], BoolLangTarget(~deck1, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster; ~libraryConsole.referenceTrack_(~deck1.track) }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
+MidiButton([2, 12, ~mXone], BoolLangTarget(~deck1, \userInducedGridOffsetSetpoint), mode: \direct); // TODO test and add for other decks ("adjust" button, next to sync)
 //tempo
 MidiCC([36, 12, ~mXone], ContinuousLangTarget(~deck1, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -126,7 +127,7 @@ MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \pitchbend, clip: false), 
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
 MidiButton([7, 13, ~mXone], BoolLangTarget(~deck2, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster; ~libraryConsole.referenceTrack_(~deck2.track) }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -151,7 +152,7 @@ MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \pitchbend, clip: false), 
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
 MidiButton([7, 14, ~mXone], BoolLangTarget(~deck3, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster; ~libraryConsole.referenceTrack_(~deck3.track) }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -176,7 +177,7 @@ MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \pitchbend, clip: false), 
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping) , mode: \relative, active: { ~uShift });
 //sync
 MidiButton([7, 15, ~mXone], BoolLangTarget(~deck4, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster; ~libraryConsole.referenceTrack_(~deck4.track) }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -210,7 +211,8 @@ MidiCC([92, 0, ~mBcr], ServerTarget(~sChannel4, \push), mode: \absolute);
 MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
 
 // barcodeScanner
-~barcodeScanner = HID.open(3118, 2823, "\\\\?\\hid#vid_0c2e&pid_0b07&mi_00#8&12aced56&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}");
+~hidList = HID.findAvailable;
+~barcodeScanner = HID.openAt(~hidList.selectKeys({ |item| item.productName =="HID POS" })[0]); // we find and open the hid Pos device, assuming there is only one, and it is the barcode scanner
 ~barcodeSource = HidSource(4,~barcodeScanner);
 HidValRaw(~barcodeSource, {|valRaw| 
     var valRawString, playlist;
