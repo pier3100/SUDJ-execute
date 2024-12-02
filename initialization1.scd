@@ -1,11 +1,11 @@
 // load configuration
-Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-execute\\config.JSON");
+Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-data\\config.JSON");
 
 // start logger
 Log.new(Library.at(\logPath));
 
 // music library
-~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath));
+~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath), forceLoad: false);
 ~musicLibrary.addPseudoPlaylist("E1", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E1".asSymbol));
 ~musicLibrary.addPseudoPlaylist("E2", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E2".asSymbol));
 ~musicLibrary.addPseudoPlaylist("E3", ~musicLibrary.playlists.at("$ROOT".asSymbol, "E3".asSymbol));
