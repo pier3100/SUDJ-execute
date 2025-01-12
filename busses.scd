@@ -13,4 +13,5 @@
 ~bCrossR = Bus.audio(s,~numberChannels);
 ~bCrossBypass = Bus.audio(s,~numberChannels);
 ~bOutMain = Bus.audio(s,~numberChannels);
+~bQue = Bus.audio(s,~numberChannels);
 ~bOutHeads = Bus.audio(s,~numberChannels);

@@ -8,14 +8,18 @@ SynthDef(\inputs, {
 }).add;
 
 SynthDef(\outputs, {
-	var inputMain, inputHeads, outputMain, outputHeads;
+	var inputMain, inputQue, outputMain, outputHeadsMain, outputHeadsQue, outputHeads, splitQue;
 	inputMain = In.ar(~bOutMain,~numberChannels);
 	outputMain =  FoaDecode.ar(inputMain, ~matrixDecoderMain);
 	outputMain = MulAdd(outputMain,~speakerDbsCorrection.dbamp); // correct for speaker locations
 	outputMain = outputMain * ServerControlLag.kr(\volume,1);
     Out.ar(0, outputMain);
-    inputHeads = In.ar(~bOutHeads,~bOutHeads.numChannels);
-    outputHeads = FoaDecode.ar(inputHeads, ~matrixDecoderHeads);
+    inputQue = In.ar(~bQue,~bQue.numChannels);
+    outputHeadsMain = FoaDecode.ar(inputMain, ~matrixDecoderHeads);
+    outputHeadsQue = FoaDecode.ar(inputQue, ~matrixDecoderHeads);
+    splitQue = ServerControlLag.kr(\splitQue, 0);
+    //splitQue = (ServerControlLag.kr(\splitQue, 0).asin*2/pi).asin*2/pi; // we correct for the fact that the output from xone for this knob is not symmetric EDIT, this trick does not work, because we have too poor resolution on the right side of the knob
+    outputHeads = [XFade2.ar(outputHeadsMain[0], outputHeadsQue[0], splitQue.linlin(0.5,1,-1,1)), XFade2.ar(outputHeadsMain[1], outputHeadsQue[1], splitQue.linlin(0,0.5,-1,1))];
     outputHeads = outputHeads * ServerControlLag.kr(\headPhoneGainDb, Library.at(\headPhoneGainDb)).dbamp;
     Out.ar(6, outputHeads);
 }).add;
@@ -41,9 +45,8 @@ SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfade
     var input, output, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
     output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -20, 20).dbamp; // -6 to +6 gain
-	output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
-    output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5).linlin(0,1,-pi/2,pi/2));
-    
+	output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5).linlin(0,1,-pi/2,pi/2));
+    output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
     
     // EQ
     lowGain = ServerControlLag.kr(\lowGain, 0.5);
@@ -62,7 +65,7 @@ SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfade
     Out.ar(~bCrossL, outputPostFader * crossfaderSelectorL);
     Out.ar(~bCrossR, outputPostFader * crossfaderSelectorR);
     Out.ar(~bCrossBypass, outputPostFader * (1 - crossfaderSelectorL) * (1 - crossfaderSelectorR));
-    Out.ar(~bOutHeads, output * que);
+    Out.ar(~bQue, output * que);
 }).add;
 
 //mainmixer
@@ -72,7 +75,8 @@ SynthDef(\mainMixer, {
     output = output + In.ar(~bCrossBypass, ~numberChannels);
     output = output + In.ar(~bSend1, ~numberChannels) + In.ar(~bSend2, ~numberChannels) + In.ar(~bSend3, ~numberChannels);// add sends
     Out.ar(~bOutMain, output);//all seperate channels have allready been added, we only need to add the send
-    Out.ar(~bOutHeads, In.ar(~bPreview, ~numberChannels));
+    Out.ar(~bQue, In.ar(~bPreview, ~numberChannels));
+    //Out.ar(~bOutHeads, (1-splitQue)*FoaRotate.ar(FoaPushX.ar(In.ar(~bOutMain, ~numberChannels), splitQue.linlin(0,0.5,0,pi)), angle: splitQue.linlin(0,1,0,pi)) + splitQue*FoaRotate.ar(FoaPushX.ar(In.ar(~bQue, ~numberChannels), splitQue.linlin(0.5,1,pi,0)), angle: pi + splitQue.linlin(0,1,0,pi)));
 }).add;
 
 //vst
