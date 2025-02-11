@@ -10,7 +10,7 @@ ServerQuit.add({ "shutting down".log });
 ServerQuit.add({ Library.at(\log).close });
 
 //ableton link clock
-c = LinkClock.new.latency_(Server.default.latency);
+c = LinkClock.new(2).latency_(Server.default.latency);
 
 //plc functionality
 ~mainPLC = PLC.new(1000);

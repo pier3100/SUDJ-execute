@@ -64,6 +64,9 @@ MidiButton([29, 11, ~mXone], ServerTarget(~sChannel4, \crossfaderSelectorR));
 // crossfader
 MidiCC([13, 11, ~mXone], ServerTarget(~sMixer, \crossFader), mode:\absolute);
 
+//splitQue crossfader
+MidiCC([21, 11, ~mXone], ServerTarget(~sOutputs, \splitQue), mode: \absolute);
+
 // MidiHidSystem
 MidiButton.new([60, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\macroToggle));
 MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGlobalSensitivity));
@@ -76,14 +79,20 @@ MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGloba
 //~libraryConsole.filter(3);
 
 // browse tracks
+MidiButton([17, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(false); ~prelistenDeck.playPause_(true) }, mode: \direct);
+MidiButton([18, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(true); ~prelistenDeck.playPause_(true) }, mode: \direct);
+MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), mode: \toggle);
+MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
+
+//sync prelistenDeck
+MidiButton([36, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.referenceTrack_(~prelistenDeck.track) }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
+
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
 //MidiButton([18, 11, ~mXone], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangControllerTarget does not support boolean objects themselves
-MidiButton([18, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), mode: \push);
-MidiCC([33, 11, ~mXone], BoolLangControllerTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
-MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
-MidiButton([36, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
-MidiCC([21, 11, ~mXone], ServerTarget(~sOutputs, \splitQue), mode: \absolute);
+//MidiButton([18, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), mode: \push);
+//MidiCC([33, 11, ~mXone], BoolLangControllerTarget(~libraryConsole, \nextTrack), mode: \forwardBackwardButton, active: { ~prelistenDeck.playPause.not });
+//MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
 
 // // DJ deck
 
