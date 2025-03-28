@@ -8,7 +8,7 @@ SynthDef(\inputs, {
 }).add;
 
 ~outputChannelSelection = Array.series((s.options.numOutputBusChannels-2).clip(2,6));
-SynthDef(\outputs, {
+SynthDef(\outputsSurround, {
 	var inputMain, inputQue, outputMain, outputHeadsMain, outputHeadsQue, outputHeads, splitQue;
 	inputMain = In.ar(~bOutMain,~numberChannels);
 	outputMain =  FoaDecode.ar(inputMain, ~matrixDecoderMain);

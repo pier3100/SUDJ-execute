@@ -1,5 +1,8 @@
 // load configuration
-Library.addFromJSON("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-data\\config.JSON");
+Library.addFromYAML("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-data\\config.YAML");
+
+// verify configuration is legitimate
+if(["pureStereo", "surroundByKernel"].includesEqual(Library.at(\audioConfiguration)).not){ Error("Not a valid audioConfiguration").throw };
 
 // start logger
 Log.new(Library.at(\logPath));
@@ -33,7 +36,12 @@ r.prepareForRecord(numChannels:2);
 //
 ~speakerDegrees = [-30, 30, -90]; // [-30, 30, -90, 90, -150, 160];
 ~speakerDbsCorrection = [0, 0, 0, 4, 0, 4]; //In a free field - a doubling of the distance from a noise source reduces the sound pressure level with 6 decibel.
-~matrixDecoderMain = FoaDecoderMatrix.newDiametric(~speakerDegrees.degrad, k: 'single');
+if(Library.at(\audioConfiguration) == "surroundByKernel"){
+    ~matrixDecoderMain = FoaDecoderMatrix.newDiametric(~speakerDegrees.degrad, k: 'single');
+};
+if(Library.at(\audioConfiguration) == "pureStereo"){
+    ~matrixDecoderMain = FoaDecoderMatrix.newStereo;
+};
 ~matrixDecoderHeads = FoaDecoderMatrix.newStereo;
 ~kernelEncoderSuperStereo = FoaEncoderKernel.newSuper(8192);
 ~matrixEncoderStereo = FoaEncoderMatrix.newStereo;

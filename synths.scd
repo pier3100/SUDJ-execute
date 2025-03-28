@@ -13,11 +13,20 @@
 ~deck4 = DJdeck.new(~bDeck4, ~gChannel4, deckNr: 4);
 ~drumMachine = DrumMachine.new(4, 16, c, Library.at(\rhythmsPath), ~bDrumMachine, ~gChannel5);
 Synth.tail(~gPreview, \stereoToFoa, [\bus, ~bPreview]);
-Synth.tail(~gChannel1, \superStereoToFoa, [\bus, ~bDeck1]);
-Synth.tail(~gChannel2, \superStereoToFoa, [\bus, ~bDeck2]);
-Synth.tail(~gChannel3, \superStereoToFoa, [\bus, ~bDeck3]);
-Synth.tail(~gChannel4, \superStereoToFoa, [\bus, ~bDeck4]);
-Synth.tail(~gChannel5, \stereoToFoa, [\bus, ~bDrumMachine]);
+if(Library.at(\audioConfiguration) == "surroundByKernel"){
+    Synth.tail(~gChannel1, \superStereoToFoa, [\bus, ~bDeck1]);
+    Synth.tail(~gChannel2, \superStereoToFoa, [\bus, ~bDeck2]);
+    Synth.tail(~gChannel3, \superStereoToFoa, [\bus, ~bDeck3]);
+    Synth.tail(~gChannel4, \superStereoToFoa, [\bus, ~bDeck4]);
+    Synth.tail(~gChannel5, \stereoToFoa, [\bus, ~bDrumMachine]);
+};
+if(Library.at(\audioConfiguration) == "pureStereo"){
+    Synth.tail(~gChannel1, \stereoToFoa, [\bus, ~bDeck1]);
+    Synth.tail(~gChannel2, \stereoToFoa, [\bus, ~bDeck2]);
+    Synth.tail(~gChannel3, \stereoToFoa, [\bus, ~bDeck3]);
+    Synth.tail(~gChannel4, \stereoToFoa, [\bus, ~bDeck4]);
+    Synth.tail(~gChannel5, \stereoToFoa, [\bus, ~bDrumMachine]);
+};
 ~sChannel1 = Synth.tail(~gChannel1, \channelMixer,[\inputBus, ~bDeck1]);
 ~sChannel2 = Synth.tail(~gChannel2, \channelMixer,[\inputBus, ~bDeck2]);
 ~sChannel3 = Synth.tail(~gChannel3, \channelMixer,[\inputBus, ~bDeck3]);
@@ -28,7 +37,7 @@ Synth.tail(~gChannel5, \stereoToFoa, [\bus, ~bDrumMachine]);
 ~sEffect2  = Synth.head(~gEffects, \distortionLowpass, [\bus, ~bSend2]);
 ~sEffect3  = Synth.head(~gEffects, \convolution, [\bus, ~bSend3, \busSide, ~bSend3Side]);
 ~sMixer    = Synth.after(~gEffects, \mainMixer);
-~sOutputs  = Synth.after(~s_mixer, \outputs);
+~sOutputs  = Synth.after(~s_mixer, \outputsSurround);
 
 //macros
 ~sMacroLFO = Synth(\macroLFO).installMacro;
