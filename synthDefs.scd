@@ -7,13 +7,14 @@ SynthDef(\inputs, {
     //Out.ar(, FoaEncode.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
 }).add;
 
+~outputChannelSelection = Array.series((s.options.numOutputBusChannels-2).clip(2,6));
 SynthDef(\outputs, {
 	var inputMain, inputQue, outputMain, outputHeadsMain, outputHeadsQue, outputHeads, splitQue;
 	inputMain = In.ar(~bOutMain,~numberChannels);
 	outputMain =  FoaDecode.ar(inputMain, ~matrixDecoderMain);
 	outputMain = MulAdd(outputMain,~speakerDbsCorrection.dbamp); // correct for speaker locations
 	outputMain = outputMain * ServerControlLag.kr(\volume,1);
-    Out.ar(0, outputMain);
+    Out.ar(0, outputMain[~outputChannelSelection]); // we only output as many channels as we have speakers
     inputQue = In.ar(~bQue,~bQue.numChannels);
     outputHeadsMain = FoaDecode.ar(inputMain, ~matrixDecoderHeads);
     outputHeadsQue = FoaDecode.ar(inputQue, ~matrixDecoderHeads);
@@ -21,7 +22,7 @@ SynthDef(\outputs, {
     //splitQue = (ServerControlLag.kr(\splitQue, 0).asin*2/pi).asin*2/pi; // we correct for the fact that the output from xone for this knob is not symmetric EDIT, this trick does not work, because we have too poor resolution on the right side of the knob
     outputHeads = [XFade2.ar(outputHeadsMain[0], outputHeadsQue[0], splitQue.linlin(0.5,1,-1,1)), XFade2.ar(outputHeadsMain[1], outputHeadsQue[1], splitQue.linlin(0,0.5,-1,1))];
     outputHeads = outputHeads * ServerControlLag.kr(\headPhoneGainDb, Library.at(\headPhoneGainDb)).dbamp;
-    Out.ar(6, outputHeads);
+    Out.ar(~outputChannelSelection.size, outputHeads); // for example: if you have 6 channels, we assume last two are for headphone, first four are for speakers; so nSpeakers = 4; then busses 0,1,2,3 are for the speakers, and 4,5 are headphones, so headphone should start at 4 = nSpeakers
 }).add;
 
 //multichannel conversions
@@ -44,7 +45,7 @@ SynthDef(\stereoToFoa, { |bus|
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|
     var input, output, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
-    output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -20, 20).dbamp; // -6 to +6 gain
+    output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -30, 30).dbamp; // -6 to +6 gain
 	output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5).linlin(0,1,-pi/2,pi/2));
     output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
     

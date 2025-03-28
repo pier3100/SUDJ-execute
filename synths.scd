@@ -25,7 +25,7 @@ Synth.tail(~gChannel5, \stereoToFoa, [\bus, ~bDrumMachine]);
 ~sChannel5 = Synth.tail(~gChannel5, \channelMixer,[\inputBus, ~bDrumMachine]);
 ~gEffects  = Group.new(~gChannels, \addAfter);
 ~sEffect1  = Synth.head(~gEffects, \vst,[\bus, ~bSend1]);
-~sEffect2  = Synth.head(~gEffects, \distortionLowpass,[\bus, ~bSend2]);
+~sEffect2  = Synth.head(~gEffects, \distortionLowpass, [\bus, ~bSend2]);
 ~sEffect3  = Synth.head(~gEffects, \convolution, [\bus, ~bSend3, \busSide, ~bSend3Side]);
 ~sMixer    = Synth.after(~gEffects, \mainMixer);
 ~sOutputs  = Synth.after(~s_mixer, \outputs);

@@ -15,3 +15,5 @@
 ~bOutMain = Bus.audio(s,~numberChannels);
 ~bQue = Bus.audio(s,~numberChannels);
 ~bOutHeads = Bus.audio(s,~numberChannels);
+~bScopeKr = Bus.control(s,1);
+~bScopeAr= Bus.audio(s,1);
