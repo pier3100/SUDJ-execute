@@ -80,8 +80,8 @@ MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGloba
 
 // browse tracks
 MidiButton([17, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(false); ~prelistenDeck.playPause_(true) }, mode: \direct);
-MidiButton([18, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(true); ~prelistenDeck.playPause_(true) }, mode: \direct);
-MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), mode: \toggle);
+MidiButton([18, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(true); ~prelistenDeck.playPause_(true) }, spacingTime: 0.4, mode: \direct); // spacingTime = 1, because the button mallfunctions and often registers two pushes instead of one
+MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), spacingTime: 0.4; mode: \toggle);
 MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
 
 //sync prelistenDeck
@@ -145,7 +145,7 @@ MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \pitchbend, clip: false), 
 MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping), mode: \relative, sensitivity: 0.2, active: { ~uShift });
 MidiCC([31, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping), mode: \plcFeedbackOnly);
 //sync
-MidiButton([7, 13, ~mXone], BoolLangControllerTarget(~deck2, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 13, ~mXone], BoolLangLangTarget(~deck2, \sync), mode: \toggle, active: { ~uShift.not });
 MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster; ~libraryConsole.referenceTrack_(~deck2.track) }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode: \relative);
@@ -178,7 +178,7 @@ MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \pitchbend, clip: false), 
 MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping), mode: \relative, sensitivity: 0.2, active: { ~uShift });
 MidiCC([31, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping), mode: \plcFeedbackOnly);
 //sync
-MidiButton([7, 14, ~mXone], BoolLangControllerTarget(~deck3, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 14, ~mXone], BoolLangLangTarget(~deck3, \sync), mode: \toggle, active: { ~uShift.not });
 MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster; ~libraryConsole.referenceTrack_(~deck3.track) }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode: \relative);
@@ -211,7 +211,7 @@ MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \pitchbend, clip: false), 
 MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping), mode: \relative, sensitivity: 0.2, active: { ~uShift });
 MidiCC([31, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping), mode: \plcFeedbackOnly);
 //sync
-MidiButton([7, 15, ~mXone], BoolLangControllerTarget(~deck4, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([7, 15, ~mXone], BoolLangLangTarget(~deck4, \sync), mode: \toggle, active: { ~uShift.not });
 MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster; ~libraryConsole.referenceTrack_(~deck4.track) }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode: \relative);
