@@ -81,7 +81,7 @@ MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGloba
 // browse tracks
 MidiButton([17, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(false); ~prelistenDeck.playPause_(true) }, mode: \direct);
 MidiButton([18, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(true); ~prelistenDeck.playPause_(true) }, spacingTime: 0.4, mode: \direct); // spacingTime = 1, because the button mallfunctions and often registers two pushes instead of one
-MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), spacingTime: 0.4; mode: \toggle);
+MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), spacingTime: 0.4, mode: \toggle);
 MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
 
 //sync prelistenDeck
