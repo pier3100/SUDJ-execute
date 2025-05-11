@@ -73,7 +73,7 @@ MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGloba
 
 // // DJ console
 // select playlist // for now you need to do this manually
-~libraryConsole.loadPlaylist(~musicLibrary.playlists.at("$ROOT".asSymbol, \Custom, \All));
+~libraryConsole.loadPlaylist(~musicLibrary.playlists.at("$ROOT".asSymbol, \Special, \All));
 ~libraryConsole.nextTrack_; // we select the first track of the playlist
 //~libraryConsole.activeTrackArray = ~musicLibrary.findPlaylistByTitle("beatsync")[0].asArray;
 //~libraryConsole.filter(3);

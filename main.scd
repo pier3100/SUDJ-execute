@@ -1,5 +1,5 @@
 (
-Routine.run {
+r = Routine.run {
 	"initialization1.scd".loadRelative;
 	s.sync;
 	"initialization2.scd".loadRelative;
