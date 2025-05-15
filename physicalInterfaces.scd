@@ -81,11 +81,11 @@ MidiButton([61, 0, ~mBcr], BoolLangControllerTarget(MidiHidSystem,\activateGloba
 // browse tracks
 MidiButton([17, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(false); ~prelistenDeck.playPause_(true) }, mode: \direct);
 MidiButton([18, 11, ~mXone], { ~prelistenDeck.playPause_(false); ~libraryConsole.nextTrack_(true); ~prelistenDeck.playPause_(true) }, spacingTime: 0.4, mode: \direct); // spacingTime = 1, because the button mallfunctions and often registers two pushes instead of one
-MidiButton([19, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \playPause), spacingTime: 0.4, mode: \toggle);
+MidiButton([19, 11, ~mXone], BoolLangLangTarget(~prelistenDeck, \playPause), spacingTime: 0.4, mode: \toggle);
 MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) , mode: \relative, active: { ~prelistenDeck.playPause });
 
 //sync prelistenDeck
-MidiButton([36, 11, ~mXone], BoolLangControllerTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
+MidiButton([36, 11, ~mXone], BoolLangLangTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
 MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.referenceTrack_(~prelistenDeck.track) }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
 
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
@@ -98,7 +98,7 @@ MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.refer
 
 // deck1
 // loadTrack
-MidiButton([22, 12, ~mXone],{ ~deck1.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel1, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \push).resetInitial; ~libraryConsole.setReferenceTrack  } }, mode: \direct);
+MidiButton([22, 12, ~mXone],{ ~deck1.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel1, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //MidiButton([22, 12, ~mXone],{ ~sChannel1~deck1.loadAndPlayDouble(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct, active: { ~deck1.playPause.not });
 //play
 MidiButton([19, 12, ~mXone], BoolLangLangTarget(~deck1, \playPause), mode: \toggle);
@@ -113,15 +113,15 @@ MidiCC([31, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping), mode: \p
 //sync
 MidiButton([7, 12, ~mXone], BoolLangLangTarget(~deck1, \sync), mode: \toggle, active: { ~uShift.not });
 MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster; ~libraryConsole.referenceTrack_(~deck1.track) }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
-MidiButton([2, 12, ~mXone], BoolLangControllerTarget(~deck1, \userInducedGridOffsetSetpoint), mode: \direct); // TODO test and add for other decks ("adjust" button, next to sync)
+//MidiButton([2, 12, ~mXone], BoolLangControllerTarget(~deck1, \userInducedGridOffsetSetpoint), mode: \direct); // TODO test and add for other decks ("adjust" button, next to sync); change to LangLangTarget
 //tempo
 MidiCC([36, 12, ~mXone], ContinuousLangTarget(~deck1, \tempo, clip: false), mode: \relative);
 //beatjump
-MidiButton([2, 12, ~mXone], {~deck1.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not });
+MidiButton([2, 12, ~mXone], {~deck1.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not }, spacingTime: 0.4);
 MidiButton([12, 12, ~mXone], {~deck1.beatJumpNow(1)}, mode: \direct, active: { ~uShift.not });
 MidiButton([3, 12, ~mXone], {~deck1.beatJumpNow(-32)}, mode: \direct, active: { ~uShift.not }); 
 MidiButton([13, 12, ~mXone], {~deck1.beatJumpNow(32)}, mode: \direct, active: { ~uShift.not });
-MidiButton([2, 12, ~mXone], {~deck1.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift });
+MidiButton([2, 12, ~mXone], {~deck1.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift }, spacingTime: 0.4);
 MidiButton([12, 12, ~mXone], {~deck1.beatJumpShifted(1)}, mode: \direct, active: { ~uShift });
 MidiButton([3, 12, ~mXone], {~deck1.beatJumpShifted(-32)}, mode: \direct, active: { ~uShift }); 
 MidiButton([13, 12, ~mXone], {~deck1.beatJumpShifted(32)}, mode: \direct, active: { ~uShift });
@@ -133,7 +133,7 @@ MidiCC([35, 12, ~mXone], ContinuousLangTarget(~deck1, \loopTableIndex, clip: fal
 
 // deck2
 // loadTrack
-MidiButton([22, 13, ~mXone],{ ~deck2.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel2, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \push).resetInitial; ~libraryConsole.setReferenceTrack  } }, mode: \direct);
+MidiButton([22, 13, ~mXone],{ ~deck2.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel2, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 13, ~mXone], BoolLangLangTarget(~deck2, \playPause), mode: \toggle);
 //que
@@ -150,11 +150,11 @@ MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster; ~libraryConsole.referenceTrack
 //tempo
 MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode: \relative);
 //beatjump
-MidiButton([2, 13, ~mXone], {~deck2.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not });
+MidiButton([2, 13, ~mXone], {~deck2.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not }, spacingTime: 0.4);
 MidiButton([12, 13, ~mXone], {~deck2.beatJumpNow(1)}, mode: \direct, active: { ~uShift.not });
 MidiButton([3, 13, ~mXone], {~deck2.beatJumpNow(-32)}, mode: \direct, active: { ~uShift.not }); 
 MidiButton([13, 13, ~mXone], {~deck2.beatJumpNow(32)}, mode: \direct, active: { ~uShift.not });
-MidiButton([2, 13, ~mXone], {~deck2.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift });
+MidiButton([2, 13, ~mXone], {~deck2.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift }, spacingTime: 0.4);
 MidiButton([12, 13, ~mXone], {~deck2.beatJumpShifted(1)}, mode: \direct, active: { ~uShift });
 MidiButton([3, 13, ~mXone], {~deck2.beatJumpShifted(-32)}, mode: \direct, active: { ~uShift }); 
 MidiButton([13, 13, ~mXone], {~deck2.beatJumpShifted(32)}, mode: \direct, active: { ~uShift });
@@ -166,7 +166,7 @@ MidiCC([35, 13, ~mXone], ContinuousLangTarget(~deck2, \loopTableIndex, clip: fal
 
 // deck 3
 // loadTrack
-MidiButton([22, 14, ~mXone],{ ~deck3.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel3, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \push).resetInitial; ~libraryConsole.setReferenceTrack  } }, mode: \direct);
+MidiButton([22, 14, ~mXone],{ ~deck3.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel3, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 14, ~mXone], BoolLangLangTarget(~deck3, \playPause), mode: \toggle);
 //que
@@ -183,11 +183,11 @@ MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster; ~libraryConsole.referenceTrack
 //tempo
 MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode: \relative);
 //beatjump
-MidiButton([2, 14, ~mXone], {~deck3.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not });
+MidiButton([2, 14, ~mXone], {~deck3.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not }, spacingTime: 0.4);
 MidiButton([12, 14, ~mXone], {~deck3.beatJumpNow(1)}, mode: \direct, active: { ~uShift.not });
 MidiButton([3, 14, ~mXone], {~deck3.beatJumpNow(-32)}, mode: \direct, active: { ~uShift.not }); 
 MidiButton([13, 14, ~mXone], {~deck3.beatJumpNow(32)}, mode: \direct, active: { ~uShift.not });
-MidiButton([2, 14, ~mXone], {~deck3.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift });
+MidiButton([2, 14, ~mXone], {~deck3.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift }, spacingTime: 0.4);
 MidiButton([12, 14, ~mXone], {~deck3.beatJumpShifted(1)}, mode: \direct, active: { ~uShift });
 MidiButton([3, 14, ~mXone], {~deck3.beatJumpShifted(-32)}, mode: \direct, active: { ~uShift }); 
 MidiButton([13, 14, ~mXone], {~deck3.beatJumpShifted(32)}, mode: \direct, active: { ~uShift });
@@ -199,7 +199,7 @@ MidiCC([35, 14, ~mXone], ContinuousLangTarget(~deck3, \loopTableIndex, clip: fal
 
 // deck 4
 // loadTrack
-MidiButton([22, 15, ~mXone],{ ~deck4.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel4, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \push).resetInitial; ~libraryConsole.setReferenceTrack  } }, mode: \direct);
+MidiButton([22, 15, ~mXone],{ ~deck4.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel4, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 15, ~mXone], BoolLangLangTarget(~deck4, \playPause), mode: \toggle);
 //que
@@ -216,14 +216,14 @@ MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster; ~libraryConsole.referenceTrack
 //tempo
 MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode: \relative);
 //beatjump
-MidiButton([2, 15, ~mXone], {~deck5.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not });
-MidiButton([12, 15, ~mXone], {~deck5.beatJumpNow(1)}, mode: \direct, active: { ~uShift.not });
-MidiButton([3, 15, ~mXone], {~deck5.beatJumpNow(-32)}, mode: \direct, active: { ~uShift.not }); 
-MidiButton([13, 15, ~mXone], {~deck5.beatJumpNow(32)}, mode: \direct, active: { ~uShift.not });
-MidiButton([2, 15, ~mXone], {~deck5.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift });
-MidiButton([12, 15, ~mXone], {~deck5.beatJumpShifted(1)}, mode: \direct, active: { ~uShift });
-MidiButton([3, 15, ~mXone], {~deck5.beatJumpShifted(-32)}, mode: \direct, active: { ~uShift }); 
-MidiButton([13, 15, ~mXone], {~deck5.beatJumpShifted(32)}, mode: \direct, active: { ~uShift });
+MidiButton([2, 15, ~mXone], {~deck4.beatJumpNow(-1)}, mode: \direct, active: { ~uShift.not }, spacingTime: 0.4);
+MidiButton([12, 15, ~mXone], {~deck4.beatJumpNow(1)}, mode: \direct, active: { ~uShift.not });
+MidiButton([3, 15, ~mXone], {~deck4.beatJumpNow(-32)}, mode: \direct, active: { ~uShift.not }); 
+MidiButton([13, 15, ~mXone], {~deck4.beatJumpNow(32)}, mode: \direct, active: { ~uShift.not });
+MidiButton([2, 15, ~mXone], {~deck4.beatJumpShifted(-1)}, mode: \direct, active: { ~uShift }, spacingTime: 0.4);
+MidiButton([12, 15, ~mXone], {~deck4.beatJumpShifted(1)}, mode: \direct, active: { ~uShift });
+MidiButton([3, 15, ~mXone], {~deck4.beatJumpShifted(-32)}, mode: \direct, active: { ~uShift }); 
+MidiButton([13, 15, ~mXone], {~deck4.beatJumpShifted(32)}, mode: \direct, active: { ~uShift });
 
 //loop
 MidiButton([1, 15, ~mXone], BoolLangLangTarget(~deck4, \loop), mode: \toggle);

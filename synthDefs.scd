@@ -43,18 +43,20 @@ SynthDef(\stereoToFoa, { |bus|
 
 //channelmixer
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|
-    var input, output, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
+    var input, output, freqLow, freqHigh, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
     output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -30, 30).dbamp; // -6 to +6 gain
 	output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5).linlin(0,1,-pi/2,pi/2));
     output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
     
     // EQ
+    freqLow = ServerControlLag.kr(\freqLow, Library.at(\EqFreqLow));
+    freqHigh = ServerControlLag.kr(\freqHigh, Library.at(\EqFreqHigh));
     lowGain = ServerControlLag.kr(\lowGain, 0.5);
     midGain = ServerControlLag.kr(\midGain, 0.5);
     highGain = ServerControlLag.kr(\highGain, 0.5);
-    vst1 = VSTPlugin.ar([output[0], output[1]], 2, params: [4, lowGain, 5, midGain, 6, highGain], id: \eq3vst1);
-    vst2 = VSTPlugin.ar(output[2], 1, params: [4, lowGain, 5, midGain, 6, highGain], id: \eq3vst2);
+    vst1 = VSTPlugin.ar([output[0], output[1]], 2, params: [2, freqLow, 3, freqHigh, 4, lowGain, 5, midGain, 6, highGain], id: \eq3vst1);
+    vst2 = VSTPlugin.ar(output[2], 1, params: [2, freqLow, 3, freqHigh, 4, lowGain, 5, midGain, 6, highGain], id: \eq3vst2);
     output = [vst1[0], vst1[1], vst2];
     output = DjFilter.ar(output, ServerControlLag.kr(\filter, 0.5));
     // Sends
