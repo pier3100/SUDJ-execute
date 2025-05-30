@@ -6,6 +6,7 @@ ShutDown.add({ Server.default.quit });
 ServerQuit.add({ ~sOutputs.free }); // prevenst noise when shutting down the server
 ServerQuit.add({ MidiHidSystem.enabled_(false) });
 ServerQuit.add({ ~musicLibrary.store(Library.at(\musicLibraryPath)) });
+ServerQuit.add({ ~musicLibrary.storeCustom(Library.at(\musicLibraryCustomPartPath)) });
 ServerQuit.add({ "shutting down".log });
 ServerQuit.add({ Library.at(\log).close });
 

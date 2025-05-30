@@ -9,7 +9,7 @@ Log.new(Library.at(\logPath));
 
 // music library
 ~reload = true;
-~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\traktorLibraryPath), forceLoad: ~reload); // reusing existing library is broken; but it is also redundant is reloading from scratch is considerably faster
+~musicLibrary = MusicLibrary.loadFromTraktor(Library.at(\musicLibraryPath), Library.at(\musicLibraryCustomPartPath), Library.at(\traktorLibraryPath), forceLoad: ~reload); // reusing existing library is broken; but it is also redundant is reloading from scratch is considerably faster
 if(~reload){
 	PseudoPlaylist.new("E1", ["$ROOT".asSymbol, \E1]).addToLibrary;
 	PseudoPlaylist.new("E2", ["$ROOT".asSymbol, \E2]).addToLibrary;

@@ -14,10 +14,16 @@ TODO:
 // midi xone
 // shift
 ~uShift = false; // global shift button modifier; we use the u to indicate a user input modifier
-MidiButton([16, 12, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
-MidiButton([16, 13, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
-MidiButton([16, 14, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
-MidiButton([16, 15, ~mXone], {~uShift = true}, {~uShift = false}, \direct, targetOut: {~uShift});
+~uS1 = false;
+~uS2 = false;
+~uS3 = false;
+~uS4 = false;
+
+MidiButton([16, 12, ~mXone], {~uShift = true; ~uS1 = true}, {~uShift = false; ~uS1 =  false}, \direct, targetOut: {~uShift});
+MidiButton([16, 13, ~mXone], {~uShift = true; ~uS2 = true}, {~uShift = false; ~uS2 =  false}, \direct, targetOut: {~uShift});
+MidiButton([16, 14, ~mXone], {~uShift = true; ~uS3 = true}, {~uShift = false; ~uS3 =  false}, \direct, targetOut: {~uShift});
+MidiButton([16, 15, ~mXone], {~uShift = true; ~uS4 = true}, {~uShift = false; ~uS4 =  false}, \direct, targetOut: {~uShift});
+
 // eq
 MidiCC([1, 11, ~mXone], ServerTarget(~sChannel1,\highGain), mode:\absolute);
 MidiCC([2, 11, ~mXone], ServerTarget(~sChannel1,\midGain), mode:\absolute);
@@ -86,7 +92,7 @@ MidiCC([33, 11, ~mXone], ContinuousLangTarget(~prelistenDeck, \needledropping) ,
 
 //sync prelistenDeck
 MidiButton([36, 11, ~mXone], BoolLangLangTarget(~prelistenDeck, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.referenceTrack_(~prelistenDeck.track) }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
+MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.setReferenceTrack(~prelistenDeck.track) }, targetOut: { ~prelistenDeck.sync }, mode: \direct, active: { ~uShift });
 
 // we use the same approach as currently in Traktor, we can scroll through the library and needledrop with the same encoder
 //MidiButton([18, 11, ~mXone], { ~uNeedleDrop = true }, { ~uNeedleDrop = false }, mode: \direct); // emulate push behavior because BoolLangControllerTarget does not support boolean objects themselves
@@ -112,7 +118,7 @@ MidiCC([38, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping), mode: \r
 MidiCC([31, 12, ~mXone], ContinuousLangTarget(~deck1, \needledropping), mode: \plcFeedbackOnly);
 //sync
 MidiButton([7, 12, ~mXone], BoolLangLangTarget(~deck1, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster; ~libraryConsole.referenceTrack_(~deck1.track) }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 12, ~mXone], { ~deck1.setAsMaster; ~libraryConsole.setReferenceTrack(~deck1.track) }, targetOut: { ~deck1.sync }, mode: \direct, active: { ~uShift });
 //MidiButton([2, 12, ~mXone], BoolLangControllerTarget(~deck1, \userInducedGridOffsetSetpoint), mode: \direct); // TODO test and add for other decks ("adjust" button, next to sync); change to LangLangTarget
 //tempo
 MidiCC([36, 12, ~mXone], ContinuousLangTarget(~deck1, \tempo, clip: false), mode: \relative);
@@ -146,7 +152,7 @@ MidiCC([38, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping), mode: \r
 MidiCC([31, 13, ~mXone], ContinuousLangTarget(~deck2, \needledropping), mode: \plcFeedbackOnly);
 //sync
 MidiButton([7, 13, ~mXone], BoolLangLangTarget(~deck2, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster; ~libraryConsole.referenceTrack_(~deck2.track) }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 13, ~mXone], { ~deck2.setAsMaster; ~libraryConsole.setReferenceTrack(~deck2.track) }, targetOut: { ~deck2.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 13, ~mXone], ContinuousLangTarget(~deck2, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -179,7 +185,7 @@ MidiCC([38, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping), mode: \r
 MidiCC([31, 14, ~mXone], ContinuousLangTarget(~deck3, \needledropping), mode: \plcFeedbackOnly);
 //sync
 MidiButton([7, 14, ~mXone], BoolLangLangTarget(~deck3, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster; ~libraryConsole.referenceTrack_(~deck3.track) }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 14, ~mXone], { ~deck3.setAsMaster; ~libraryConsole.setReferenceTrack(~deck3.track) }, targetOut: { ~deck3.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 14, ~mXone], ContinuousLangTarget(~deck3, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -212,7 +218,7 @@ MidiCC([38, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping), mode: \r
 MidiCC([31, 15, ~mXone], ContinuousLangTarget(~deck4, \needledropping), mode: \plcFeedbackOnly);
 //sync
 MidiButton([7, 15, ~mXone], BoolLangLangTarget(~deck4, \sync), mode: \toggle, active: { ~uShift.not });
-MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster; ~libraryConsole.referenceTrack_(~deck4.track) }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
+MidiButton([7, 15, ~mXone], { ~deck4.setAsMaster; ~libraryConsole.setReferenceTrack(~deck4.track) }, targetOut: { ~deck4.sync }, mode: \direct, active: { ~uShift });
 //tempo
 MidiCC([36, 15, ~mXone], ContinuousLangTarget(~deck4, \tempo, clip: false), mode: \relative);
 //beatjump
@@ -265,7 +271,51 @@ MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
             ~libraryConsole.loadPlaylist(playlist);
             "playlist % loaded to libraryConsole by barcode".format(playlist.name).log(HidValRaw);
         };
-    }); 
+    }, { ~uShift.not }); 
+
+    HidValRaw(~barcodeSource, {|valRaw| 
+        var valRawString, playlist;
+        valRawString = valRaw.asString;
+        // we check whether the barcode refers to a playlist (meaning the first digit is 1)
+        if(valRawString[0].digit == 1){
+            playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
+            playlist.addTrack(~deck1.track);
+            "track % loaded from deck 1 to playlist %".format(~deck1.track.title, playlist.name).log(HidValRaw);
+        };
+    }, { ~uS1 }); 
+
+    HidValRaw(~barcodeSource, {|valRaw| 
+        var valRawString, playlist;
+        valRawString = valRaw.asString;
+        // we check whether the barcode refers to a playlist (meaning the first digit is 1)
+        if(valRawString[0].digit == 1){
+            playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
+            playlist.addTrack(~deck2.track);
+            "track % loaded from deck 2 to playlist %".format(~deck2.track.title, playlist.name).log(HidValRaw);
+        };
+    }, { ~uS2 }); 
+
+    HidValRaw(~barcodeSource, {|valRaw| 
+        var valRawString, playlist;
+        valRawString = valRaw.asString;
+        // we check whether the barcode refers to a playlist (meaning the first digit is 1)
+        if(valRawString[0].digit == 1){
+            playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
+            playlist.addTrack(~deck3.track);
+            "track % loaded from deck 3 to playlist %".format(~deck3.track.title, playlist.name).log(HidValRaw);
+        };
+    }, { ~uS3 }); 
+
+    HidValRaw(~barcodeSource, {|valRaw| 
+        var valRawString, playlist;
+        valRawString = valRaw.asString;
+        // we check whether the barcode refers to a playlist (meaning the first digit is 1)
+        if(valRawString[0].digit == 1){
+            playlist = ~musicLibrary.barcodeDictionary.at(valRawString.copyRange(1, 10).asSymbol);
+            playlist.addTrack(~deck4.track);
+            "track % loaded from deck 4 to playlist %".format(~deck4.track.title, playlist.name).log(HidValRaw);
+        };
+    }, { ~uS4 }); 
 } ?? {
     " barcode scanner not found".log(HidValRaw);
 };
