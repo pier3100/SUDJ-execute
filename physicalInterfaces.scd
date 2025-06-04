@@ -322,21 +322,28 @@ MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
 
 
 //launchpad
-MidiButton([81, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 1);
-MidiButton([82, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 2);
-MidiButton([83, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 3);
-MidiButton([84, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 4);
-MidiButton([85, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 5);
-MidiButton([71, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 0.5);
-MidiButton([72, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 1);
-MidiButton([73, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 2);
-MidiButton([61, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 1);
-MidiButton([62, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 2);
-MidiButton([63, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 3);
-MidiButton([64, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 4);
-MidiButton([66, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 1);
-MidiButton([67, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 2);
-MidiButton([68, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 3);
+MidiButton([81, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 0);
+MidiButton([82, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 1);
+MidiButton([83, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 2);
+MidiButton([84, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 3);
+MidiButton([85, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 4);
+MidiButton([86, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoFilter), mode: \direct, buttonValue: 5);
+//MidiButton([71, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 0.5);
+//MidiButton([72, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 1);
+//MidiButton([73, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \tempoMultiplier), mode: \direct, buttonValue: 2);
+MidiButton([71, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 0);
+MidiButton([72, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 1);
+MidiButton([73, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 2);
+MidiButton([74, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \keyFilter), mode: \direct, buttonValue: 3);
+MidiButton([76, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 0);
+MidiButton([77, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 1);
+MidiButton([78, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \minorMajorFilterCoefficient), mode: \direct, buttonValue: 2);
+MidiButton([61, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 0);
+MidiButton([62, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 1);
+MidiButton([63, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 2);
+MidiButton([64, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 3);
+MidiButton([65, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 4);
+MidiButton([66, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \energyFilterCoefficient), mode: \direct, buttonValue: 5);
 MidiButton([51, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 1);
 MidiButton([52, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 2);
 MidiButton([53, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 4);
@@ -345,5 +352,8 @@ MidiButton([55, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libr
 MidiButton([56, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 32);
 MidiButton([57, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 64);
 MidiButton([58, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libraryConsole, \numberOfTracks), mode: \feedbackOnly, buttonValue: 128);
+MidiButton([41, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 0);
+MidiButton([42, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 1);
+MidiButton([43, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 2);
 // we turn off automatic midi feedback
 MidiHidSystem.enabled_(false);
