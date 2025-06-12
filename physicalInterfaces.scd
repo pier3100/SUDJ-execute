@@ -104,7 +104,7 @@ MidiButton([36, 11, ~mXone], { ~prelistenDeck.setAsMaster; ~libraryConsole.setRe
 
 // deck1
 // loadTrack
-MidiButton([22, 12, ~mXone],{ ~deck1.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel1, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
+MidiButton([22, 12, ~mXone],{ ~deck1.loadCopy(~prelistenDeck).if{ ~musicLibrary.playlists.at("$ROOT".asSymbol, \Special, \History).addTrack(~prelistenDeck.track); MidiHidSystem.findByTarget(~sChannel1, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel1, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //MidiButton([22, 12, ~mXone],{ ~sChannel1~deck1.loadAndPlayDouble(~prelistenDeck); ~libraryConsole.setReferenceTrack }, mode: \direct, active: { ~deck1.playPause.not });
 //play
 MidiButton([19, 12, ~mXone], BoolLangLangTarget(~deck1, \playPause), mode: \toggle);
@@ -139,7 +139,7 @@ MidiCC([35, 12, ~mXone], ContinuousLangTarget(~deck1, \loopTableIndex, clip: fal
 
 // deck2
 // loadTrack
-MidiButton([22, 13, ~mXone],{ ~deck2.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel2, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
+MidiButton([22, 13, ~mXone],{ ~deck2.loadCopy(~prelistenDeck).if{ ~musicLibrary.playlists.at("$ROOT".asSymbol, \Special, \History).addTrack(~prelistenDeck.track); MidiHidSystem.findByTarget(~sChannel2, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel2, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 13, ~mXone], BoolLangLangTarget(~deck2, \playPause), mode: \toggle);
 //que
@@ -172,7 +172,7 @@ MidiCC([35, 13, ~mXone], ContinuousLangTarget(~deck2, \loopTableIndex, clip: fal
 
 // deck 3
 // loadTrack
-MidiButton([22, 14, ~mXone],{ ~deck3.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel3, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
+MidiButton([22, 14, ~mXone],{ ~deck3.loadCopy(~prelistenDeck).if{ ~musicLibrary.playlists.at("$ROOT".asSymbol, \Special, \History).addTrack(~prelistenDeck.track); MidiHidSystem.findByTarget(~sChannel3, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel3, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 14, ~mXone], BoolLangLangTarget(~deck3, \playPause), mode: \toggle);
 //que
@@ -205,7 +205,7 @@ MidiCC([35, 14, ~mXone], ContinuousLangTarget(~deck3, \loopTableIndex, clip: fal
 
 // deck 4
 // loadTrack
-MidiButton([22, 15, ~mXone],{ ~deck4.loadDouble(~prelistenDeck).if{ MidiHidSystem.findByTarget(~sChannel4, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
+MidiButton([22, 15, ~mXone],{ ~deck4.loadCopy(~prelistenDeck).if{ ~musicLibrary.playlists.at("$ROOT".asSymbol, \Special, \History).addTrack(~prelistenDeck.track); MidiHidSystem.findByTarget(~sChannel4, \gain).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \pan).resetInitial; MidiHidSystem.findByTarget(~sChannel4, \push).resetInitial; ~prelistenDeck.pause; ~libraryConsole.reset;  } }, mode: \direct);
 //play
 MidiButton([19, 15, ~mXone], BoolLangLangTarget(~deck4, \playPause), mode: \toggle);
 //que
