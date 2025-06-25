@@ -236,6 +236,8 @@ MidiButton([1, 15, ~mXone], BoolLangLangTarget(~deck4, \loop), mode: \toggle);
 MidiButton([1, 15, ~mXone], ContinuousLangTarget(~deck4, \loopTableIndex, clip: false), mode: \direct, feedbackMode: false, buttonValue: 9, active: { ~uShift });
 MidiCC([35, 15, ~mXone], ContinuousLangTarget(~deck4, \loopTableIndex, clip: false), mode: \relativeRound);
 
+MidiCC([22, 11, ~mXone], ServerTarget(~sOutputs, \gainPrelisten), mode: \absolute);
+
 // bcr
 // channel 1
 MidiCC([81, 0, ~mBcr], ServerTarget(~sChannel1, \pan));
@@ -260,8 +262,8 @@ MidiCC([100, 0, ~mBcr], ServerTarget(~sChannel4, \gain), mode: \absolute);
 // barcodeScanner
 ~hidList = HID.findAvailable;
 ~hidList.selectKeys({ |item| item.productName =="HID POS" })[0] !? {|hidID| // if we can find the a hid device with a corresponding name, then open this device and set it up
-    ~barcodeScanner = HID.openAt(hidID); // we find and open the hid Pos device, assuming there is only one, and it is the barcode scanner
-    ~barcodeSource = HidSource(4,~barcodeScanner);
+    ~hBarcodeScanner = HID.openAt(hidID); // we find and open the hid Pos device, assuming there is only one, and it is the barcode scanner
+    ~barcodeSource = HidSource(4,~hBarcodeScanner);
     HidValRaw(~barcodeSource, {|valRaw| 
         var valRawString, playlist;
         valRawString = valRaw.asString;
@@ -355,5 +357,15 @@ MidiButton([58, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~libr
 MidiButton([41, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 0);
 MidiButton([42, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 1);
 MidiButton([43, 0, ~mLaunchPad], BoolLangLangTarget(~libraryConsole, \order), mode: \direct, buttonValue: 2);
+
+
+//ThrustMaster
+~hidList.selectKeys({ |item| item.productName =="T.Flight Stick X" })[0] !? {|hidID| // if we can find the a hid device with a corresponding name, then open this device and set it up
+    ~hThrustMaster = HID.openAt(hidID); // we find and open the hid Pos device, assuming there is only one, and it is the barcode scanner
+    HidCC([1,~hThrustMaster], ServerTarget(~sChannel6, \faderVolume), invert: true);
+    HidCC([3,~hThrustMaster], ServerTarget(~sThrustMaster, \ud));
+    HidCC([4,~hThrustMaster], ServerTarget(~sThrustMaster, \lr));
+};
+
 // we turn off automatic midi feedback
 MidiHidSystem.enabled_(false);

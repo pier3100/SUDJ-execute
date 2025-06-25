@@ -42,7 +42,7 @@ r.prepareForRecord(numChannels:2);
  */
 //
 ~speakerDegrees = [-30, 30, -90]; // [-30, 30, -90, 90, -150, 160];
-~speakerDbsCorrection = [0, 0, 0, 4, 0, 4]; //In a free field - a doubling of the distance from a noise source reduces the sound pressure level with 6 decibel.
+~speakerDbsCorrection = [0, 0, 0, 0, 0, 0]; //In a free field - a doubling of the distance from a noise source reduces the sound pressure level with 6 decibel.
 if(Library.at(\audioConfiguration) == "surroundByKernel"){
     ~matrixDecoderMain = FoaDecoderMatrix.newDiametric(~speakerDegrees.degrad, k: 'single');
 };

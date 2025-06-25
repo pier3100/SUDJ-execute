@@ -13,15 +13,16 @@ SynthDef(\outputsSurround, {
 	inputMain = In.ar(~bOutMain,~numberChannels);
 	outputMain =  FoaDecode.ar(inputMain, ~matrixDecoderMain);
 	outputMain = MulAdd(outputMain,~speakerDbsCorrection.dbamp); // correct for speaker locations
-	outputMain = ((outputMain * ServerControlLag.kr(\masterVolume, Library.at(\masterVolume)).dbamp)*(-10).dbamp).tanh; //(-10).dbamp) to make sure we have some headroom in order to gain uncompressed tracks a bit more
+	outputMain = ((outputMain * ServerControlLag.kr(\masterVolume, Library.at(\masterVolume)).dbamp)*(-10).dbamp).clip2(1); //(-10).dbamp) to make sure we have some headroom in order to gain uncompressed tracks a bit more
     Out.ar(0, outputMain[~outputChannelSelection]); // we only output as many channels as we have speakers
     inputQue = In.ar(~bQue,~bQue.numChannels);
     outputHeadsMain = FoaDecode.ar(inputMain, ~matrixDecoderHeads);
     outputHeadsQue = FoaDecode.ar(inputQue, ~matrixDecoderHeads);
+    outputHeadsQue = outputHeadsQue * ServerControlLag.kr(\gainPrelisten, 0.5).linlin(0, 1, -25, 25).dbamp; // -6 to +6 gain
     splitQue = ServerControlLag.kr(\splitQue, 0);
     //splitQue = (ServerControlLag.kr(\splitQue, 0).asin*2/pi).asin*2/pi; // we correct for the fact that the output from xone for this knob is not symmetric EDIT, this trick does not work, because we have too poor resolution on the right side of the knob
     outputHeads = [XFade2.ar(outputHeadsMain[0], outputHeadsQue[0], splitQue.linlin(0.5,1,-1,1)), XFade2.ar(outputHeadsMain[1], outputHeadsQue[1], splitQue.linlin(0,0.5,-1,1))];
-    outputHeads = ((outputHeads * ServerControlLag.kr(\headPhoneGainDb, Library.at(\headPhoneGainDb)).dbamp)*(-5).dbamp).tanh;
+    outputHeads = ((outputHeads * ServerControlLag.kr(\headPhoneGainDb, Library.at(\headPhoneGainDb)).dbamp)*(-5).dbamp).clip2(1);
     Out.ar(~outputChannelSelection.size, outputHeads); // for example: if you have 6 channels, we assume last two are for headphone, first four are for speakers; so nSpeakers = 4; then busses 0,1,2,3 are for the speakers, and 4,5 are headphones, so headphone should start at 4 = nSpeakers
 }).add;
 
@@ -45,7 +46,7 @@ SynthDef(\stereoToFoa, { |bus|
 SynthDef(\channelMixer, { |inputBus, que = 0, crossfaderSelectorL = 0, crossfaderSelectorR = 0|
     var input, output, freqLow, freqHigh, lowGain, midGain, highGain, vst1, vst2, outputPostFader;
     input = In.ar(inputBus, ~numberChannels);
-    output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -30, 30).dbamp; // -6 to +6 gain
+    output = input * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -25, 25).dbamp; // -6 to +6 gain
 	output = FoaPushX.ar(output, ServerControlLag.kr(\push, 0.5).linlin(0,1,-pi/2,pi/2));
     output = FoaRotate.ar(output, angle: ServerControlLag.kr(\pan, 0.5).linlin(0,1,-pi,pi)); // surround panner
     
@@ -129,3 +130,25 @@ MySynthDef(\macroLine,{ |macroBus|
 	reference = \ref.kr(0);
 	Out.kr(macroBus, [modulator, reference]);
 }).add.reset({ |synth, clockArg| var clock; clockArg ?? clock = TempoClock.default; synth.set(\rate, 1 / ((clock.nextBar + 16 - clock.beats) / clock.tempo)) });
+
+SynthDef(\riser1,{ |bus|
+	var freq, filterFreq, freqs, sin, out, klank, times, lr, ud,par1;
+	lr = ServerControlLag.kr(\lr,0.5);
+	ud = ServerControlLag.kr(\ud,0.5);
+	freq = 440;
+	filterFreq = ud.linexp(0,1,20000,440);
+	freqs = [0.75, 0.89 ,1]*filterFreq;
+	sin = SinOsc.ar(freq);
+	out = Pan2.ar(sin);
+	out = Hasher.ar(out);
+	out =Slew.ar(out,1000,1000);
+	klank = out * VolumeFaderCurve.kr(lr.linlin(0,0.5,0.2,0));
+	par1 = (lr*ud*16).clip(0,1);
+	par1 = Lag.kr(par1,6);
+	times = [1,2,1] + ([10,8,6] * par1);
+	klank = DynKlank.ar(`[freqs,[0.8, 1, 0.7], times], klank);
+	out = out + klank;
+	out = RLPF.ar(out,filterFreq,lr.linlin(0.6,1,1,0.02));
+    out = out * 5.dbamp;
+	Out.ar(bus,out);
+}).add;
