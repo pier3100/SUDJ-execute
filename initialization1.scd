@@ -1,4 +1,4 @@
-// load configuration
+	// load configuration
 Library.addFromYAML("C:\\Users\\piert\\MakingMusic\\SuperCollider\\SUDJ-data\\config.YAML");
 
 // verify configuration is legitimate

@@ -7,3 +7,7 @@
 ~deck2.clock.master = c; 
 ~deck3.clock.master = c; 
 ~deck4.clock.master = c; 
+
+// wind noise sound
+~windMute = Value.new(false);
+~windParameter = Value.new(0.1);

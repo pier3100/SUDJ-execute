@@ -12,7 +12,7 @@ ServerQuit.add({ Library.at(\log).close });
 
 //ableton link clock
 //c = LinkClock.new(2).latency_(Server.default.latency);
-c = TempoClock.new(2);
+c = TrackClock.new(2);
 
 //plc functionality
-~mainPLC = PLC.new(1000);
+~mainPLC = PLC.new(2);

@@ -1,6 +1,6 @@
-~plugin_name = 'SGA1566';
-~vst_plugin = VSTPluginController(~sEffect1);
-~vst_plugin.open(~plugin_name);
+//~plugin_name = 'SGA1566';
+//~vst_plugin = VSTPluginController(~sEffect1);
+//~vst_plugin.open(~plugin_name);
 
 ~vstChannel1 = VSTPluginController.collect(~sChannel1);
 ~vstChannel1.do({|item| item.open("DD DJEQ") });

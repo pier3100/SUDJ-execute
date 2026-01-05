@@ -16,6 +16,8 @@ r = Routine.run {
 	s.sync;
 	"physicalInterfaces.scd".loadRelative;
 	s.sync;
+	"physicalInterfaces2.scd".loadRelative;
+	s.sync;
 	"closeOut.scd".loadRelative;
 }
 )

@@ -7,6 +7,12 @@ SynthDef(\inputs, {
     //Out.ar(, FoaEncode.ar(In.ar(16,2), ~kernelEncoderStereo)); // make surround
 }).add;
 
+SynthDef.new(\microphone, { |bus|
+	var in;
+	in = In.ar(4, 1);
+	Out.ar(bus, in);
+}).add;
+
 ~outputChannelSelection = Array.series((s.options.numOutputBusChannels-2).clip(2,6));
 SynthDef(\outputsSurround, {
 	var inputMain, inputQue, outputMain, outputHeadsMain, outputHeadsQue, outputHeads, splitQue;
@@ -22,11 +28,18 @@ SynthDef(\outputsSurround, {
     splitQue = ServerControlLag.kr(\splitQue, 0);
     //splitQue = (ServerControlLag.kr(\splitQue, 0).asin*2/pi).asin*2/pi; // we correct for the fact that the output from xone for this knob is not symmetric EDIT, this trick does not work, because we have too poor resolution on the right side of the knob
     outputHeads = [XFade2.ar(outputHeadsMain[0], outputHeadsQue[0], splitQue.linlin(0.5,1,-1,1)), XFade2.ar(outputHeadsMain[1], outputHeadsQue[1], splitQue.linlin(0,0.5,-1,1))];
+    outputHeads = BhobLoShelf.ar(outputHeads, 200, 10);
     outputHeads = ((outputHeads * ServerControlLag.kr(\headPhoneGainDb, Library.at(\headPhoneGainDb)).dbamp)*(-5).dbamp).clip2(1);
     Out.ar(~outputChannelSelection.size, outputHeads); // for example: if you have 6 channels, we assume last two are for headphone, first four are for speakers; so nSpeakers = 4; then busses 0,1,2,3 are for the speakers, and 4,5 are headphones, so headphone should start at 4 = nSpeakers
 }).add;
 
 //multichannel conversions
+SynthDef.new(\monoToFoa, { |bus|
+	var foa;
+	foa = FoaEncode.ar(In.ar(bus, 1), FoaEncoderMatrix.newDirection); // make surround
+    ReplaceOut.ar(bus, [foa[0], foa[1], foa[2]]); //output, and ignore fourth empty channel
+}).add;
+
 SynthDef(\superStereoToFoa, { |bus|
     // we replace the stereo input with a FOA ouput, we assume that the bus had sufficient channels 
     // this induces a lag, see documentation of kernelEncoder, we take this into account be letting the patterns (which use stereo) run later than the tracks (which use superStereo)
@@ -83,12 +96,34 @@ SynthDef(\mainMixer, {
     //Out.ar(~bOutHeads, (1-splitQue)*FoaRotate.ar(FoaPushX.ar(In.ar(~bOutMain, ~numberChannels), splitQue.linlin(0,0.5,0,pi)), angle: splitQue.linlin(0,1,0,pi)) + splitQue*FoaRotate.ar(FoaPushX.ar(In.ar(~bQue, ~numberChannels), splitQue.linlin(0.5,1,pi,0)), angle: pi + splitQue.linlin(0,1,0,pi)));
 }).add;
 
-//vst
+//knobs
+SynthDef(\effectKnobsR,{
+	var knob1, knob2, knob3, knob4;
+	knob1 = ServerControlLag.kr(\knob1, 0.5);
+	knob2 = ServerControlLag.kr(\knob2, 0.5);
+	knob3 = ServerControlLag.kr(\knob3, 0.5);
+	knob4 = ServerControlLag.kr(\knob4, 0.5);
+	Out.kr(~bEffectKnobsR, [knob1, knob2, knob3, knob4]);
+}).add;
+
+SynthDef(\effectKnobsBcr,{
+	var knob1, knob2, knob3, knob4, knob5, knob6, knob7, knob8;
+	knob1 = ServerControlLag.kr(\knob1, 0.5);
+	knob2 = ServerControlLag.kr(\knob2, 0.5);
+	knob3 = ServerControlLag.kr(\knob3, 0.5);
+	knob4 = ServerControlLag.kr(\knob4, 0.5);
+    knob5 = ServerControlLag.kr(\knob5, 0.5);
+	knob6 = ServerControlLag.kr(\knob6, 0.5);
+	knob7 = ServerControlLag.kr(\knob7, 0.5);
+	knob8 = ServerControlLag.kr(\knob8, 0.5);
+	Out.kr(~bEffectKnobsBcr, [knob1, knob2, knob3, knob4, knob5, knob6, knob7, knob8]);
+}).add;
+
+//effects
 SynthDef(\vst, { |bus|
     ReplaceOut.ar(bus, VSTPlugin.ar(In.ar(bus, ~numberChannels), ~numberChannels));
 }).add;
 
-//lowpassed distortion
 SynthDef(\distortionLowpass, { |bus, parameters = #[0, 0, 0, 0]|
     var input, output, drivegain, shelvingfreq, room, damp; //the '#' sign indicates to interpret the elements as literals, that means symbolically
     drivegain = parameters[0];
@@ -111,6 +146,21 @@ SynthDef(\convolution, { |bus, busSide, framesize = 512|
     ReplaceOut.ar(bus, out);
 }).add;
 
+SynthDef.new(\delay, { |bus, effectKnobsBus, tempoBus|
+	var in, effectKnobs, tempo, delayTimeArray, delayTimeIndex, delayTime, decayTime, out;
+	in = In.ar(bus, ~numberChannels);
+	effectKnobs = In.kr(effectKnobsBus, 4);
+	tempo = In.kr(tempoBus);
+	delayTimeArray = [0.125, 0.25, 0.5, 1, 2, 4];
+	delayTimeIndex = effectKnobs[1].linlin(0,1,0,5.99).floor.asInteger;
+	delayTime = Select.kr(delayTimeIndex, delayTimeArray);// in beats
+	decayTime = effectKnobs[2].linlin(0,1,0,16); // in beats
+	out = CombC.ar(in, 8, delayTime/tempo, decayTime/tempo);
+    out = out * VolumeFaderCurve.kr(effectKnobs[0]);
+    ReplaceOut.ar(bus, out);
+}).add;
+
+
 //macros
 SynthDef(\macroLFO,{ |macroBus|
 	var output, amplitude, reference, modulator;
@@ -131,6 +181,7 @@ MySynthDef(\macroLine,{ |macroBus|
 	Out.kr(macroBus, [modulator, reference]);
 }).add.reset({ |synth, clockArg| var clock; clockArg ?? clock = TempoClock.default; synth.set(\rate, 1 / ((clock.nextBar + 16 - clock.beats) / clock.tempo)) });
 
+//joystick
 SynthDef(\riser1,{ |bus|
 	var freq, filterFreq, freqs, sin, out, klank, times, lr, ud,par1;
 	lr = ServerControlLag.kr(\lr,0.5);
@@ -150,5 +201,16 @@ SynthDef(\riser1,{ |bus|
 	out = out + klank;
 	out = RLPF.ar(out,filterFreq,lr.linlin(0.6,1,1,0.02));
     out = out * 5.dbamp;
+    out = Compander.ar(out, out, 0.5,  1, 0.2, 0.1, 0.2);
 	Out.ar(bus,out);
+}).add;
+
+//sounds
+SynthDef(\wind, {arg bus, buf, effectKnobsBus, rate = 1, pos = 0, pan = 0;
+	var env, out, bufLength,knobs;
+	knobs = In.kr(effectKnobsBus, 4);
+	bufLength = BufDur.kr(buf);
+	out = PlayBuf.ar(2,buf,rate*knobs[0].linexp(0,1,0.1,1000), loop: 1, startPos: bufLength.rand);
+	env = Env(levels: [0,1,0],times: [knobs[2],knobs[3].linlin(0,1,0,3)]);
+	Out.ar(bus, Pan2.ar(out,pos)*EnvGen.ar(env, doneAction: Done.freeSelf));
 }).add;

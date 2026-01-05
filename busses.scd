@@ -18,3 +18,10 @@
 ~bOutHeads = Bus.audio(s,~numberChannels);
 ~bScopeKr = Bus.control(s,1);
 ~bScopeAr= Bus.audio(s,1);
+~bWind = Bus.audio(s,~numberChannels);
+~bMicrophone = Bus.audio(s, ~numberChannels);
+~bEffectKnobsR = Bus.control(s, 4);
+~bEffectKnobsBcr = Bus.control(s, 8);
+
+//buffer
+~buWind = Buffer.read(s, "C:/Users/piert/MakingMusic/Samples/Falling/rocks-6129.mp3");
