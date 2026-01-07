@@ -18,7 +18,7 @@
 ~deck3 = DJdeck.new(~bDeck3, ~gChannel3, deckNr: 3);
 ~deck4 = DJdeck.new(~bDeck4, ~gChannel4, deckNr: 4);
 ~sDrumMachine = DrumMachine.new(4, 16, c, Library.at(\rhythmsPath), ~bDrumMachine, ~gChannel5);
-~sThrustMaster = Synth.head(~gChannel6, \riser1, [\bus, ~bThrustMaster]);
+~sThrustMaster = Synth.head(~gChannel6, \riser2, [\bus, ~bThrustMaster]);
 ~sMicrophone = Synth.head(~gChannel8, \microphone, [\bus, ~bMicrophone]);
 Synth.tail(~gPreview, \stereoToFoa, [\bus, ~bPreview]);
 if(Library.at(\audioConfiguration) == "surroundByKernel"){

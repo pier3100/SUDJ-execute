@@ -98,12 +98,16 @@ SynthDef(\mainMixer, {
 
 //knobs
 SynthDef(\effectKnobsR,{
-	var knob1, knob2, knob3, knob4;
+	var knob1, knob2, knob3, knob4, button1, button2, button3, button4;
 	knob1 = ServerControlLag.kr(\knob1, 0.5);
 	knob2 = ServerControlLag.kr(\knob2, 0.5);
 	knob3 = ServerControlLag.kr(\knob3, 0.5);
 	knob4 = ServerControlLag.kr(\knob4, 0.5);
-	Out.kr(~bEffectKnobsR, [knob1, knob2, knob3, knob4]);
+    button1 = ServerControlLag.kr(\button1);
+	button2 = ServerControlLag.kr(\button2);
+	button3 = ServerControlLag.kr(\button3);
+	button4 = ServerControlLag.kr(\button4);
+	Out.kr(~bEffectKnobsR, [knob1, knob2, knob3, knob4, button1, button2, button3, button4]);
 }).add;
 
 SynthDef(\effectKnobsBcr,{
@@ -149,8 +153,9 @@ SynthDef(\convolution, { |bus, busSide, framesize = 512|
 SynthDef.new(\delay, { |bus, effectKnobsBus, tempoBus|
 	var in, effectKnobs, tempo, delayTimeArray, delayTimeIndex, delayTime, decayTime, out;
 	in = In.ar(bus, ~numberChannels);
-	effectKnobs = In.kr(effectKnobsBus, 4);
-	tempo = In.kr(tempoBus);
+    effectKnobs = In.kr(effectKnobsBus, 8);
+	in = in * effectKnobs[4]; //4 tot 7, are the buttons, first button we use to mute the in feed
+    tempo = In.kr(tempoBus);
 	delayTimeArray = [0.125, 0.25, 0.5, 1, 2, 4];
 	delayTimeIndex = effectKnobs[1].linlin(0,1,0,5.99).floor.asInteger;
 	delayTime = Select.kr(delayTimeIndex, delayTimeArray);// in beats
@@ -205,12 +210,44 @@ SynthDef(\riser1,{ |bus|
 	Out.ar(bus,out);
 }).add;
 
+SynthDef(\riser2,{ |bus|
+	var out, freq, freqLfo, lr, ud, gasBrake, wheel, speed, direction, engine, wind, brake, windBrake;
+	// controls
+	lr = ServerControlLag.kr(\lr,0.5);
+	ud = ServerControlLag.kr(\ud,0.5);
+    gasBrake = ud.linlin(0,1,1,-1);
+	wheel = lr.linlin(0,1,-1,1);
+	speed = Slew.kr(InRange.kr(gasBrake, 0.0001, 2), gasBrake.linlin(0,1,0,1), (gasBrake.linexp(-1,0,10,0.04)));
+	direction = Slew.kr(wheel.sign, wheel.linlin(0,1,0,0.6), wheel.linlin(-1,0,0.6,0));//TODO should go from -1 to 1
+	// freq
+	freq = 4400*direction.linexp(-1,1,0.25,4);
+	freqLfo = 100*direction.linexp(-1,1,0.5,2);
+	// engine sound generator
+	engine = PlayBuf.ar(1,~buRiser2,freq,loop: 1);
+	engine = engine * VolumeFaderCurve.kr(speed);
+	engine = DjFilter.ar(engine,lr);
+	// windreverb
+	//wind = FreeVerb2.ar(engine[0],engine[1],1,1,0.1);
+	//wind = GVerb.ar(engine, drylevel: 0);
+	wind = engine;
+	//windBrake = Slope.kr(gasBrake).neg.clip(0,1);
+	windBrake = gasBrake.linlin(-1,0,0.1,1);
+	wind = Compander.ar(wind, wind, windBrake, 1, 0) / windBrake; // to compensate for volume
+	wind = GVerb.ar(wind, roomsize: 50, damping: 0.8,);
+	wind = wind * SinOsc.ar(freqLfo,0,0.1,1);
+	//wind = AnalogVintageDistortion.ar(wind,gasBrake.linlin(-0.15,0,1,0));
+	//out
+	out = engine + (1 * wind);// + brake;
+	out = out * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, 25, -25).dbamp; // -6 to +6 gain
+	Out.ar(bus,out);
+}).add;
+
 //sounds
 SynthDef(\wind, {arg bus, buf, effectKnobsBus, rate = 1, pos = 0, pan = 0;
 	var env, out, bufLength,knobs;
 	knobs = In.kr(effectKnobsBus, 4);
 	bufLength = BufDur.kr(buf);
-	out = PlayBuf.ar(2,buf,rate*knobs[0].linexp(0,1,0.1,1000), loop: 1, startPos: bufLength.rand);
+	out = PlayBuf.ar(2,buf,(rate + SinOsc.ar(0.1, mul: 0.1))*knobs[0].linexp(0,1,0.1,1000), loop: 1, startPos: (knobs[1]*bufLength.rand).floor);
 	env = Env(levels: [0,1,0],times: [knobs[2],knobs[3].linlin(0,1,0,3)]);
 	Out.ar(bus, Pan2.ar(out,pos)*EnvGen.ar(env, doneAction: Done.freeSelf));
 }).add;

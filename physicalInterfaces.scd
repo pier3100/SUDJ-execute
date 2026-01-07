@@ -57,6 +57,12 @@ MidiButton([15, 11, ~mXone], ServerTarget(~sChannel2, \que), mode: \toggle);
 MidiButton([25, 11, ~mXone], ServerTarget(~sChannel3, \que), mode: \toggle);
 MidiButton([30, 11, ~mXone], ServerTarget(~sChannel4, \que), mode: \toggle);
 
+// channel send1
+//MidiButton([7, 11, ~mXone], ServerTarget(~sChannel1, \send1Volume), mode: \toggle);
+//MidiButton([12, 11, ~mXone], ServerTarget(~sChannel2, \send1Volume), mode: \toggle);
+//MidiButton([22, 11, ~mXone], ServerTarget(~sChannel3, \send1Volume), mode: \toggle);
+//MidiButton([27, 11, ~mXone], ServerTarget(~sChannel4, \send1Volume), mode: \toggle);
+
 // channel crossfader switch
 MidiButton([8, 11, ~mXone], ServerTarget(~sChannel1, \crossfaderSelectorL));
 MidiButton([9, 11, ~mXone], ServerTarget(~sChannel1, \crossfaderSelectorR));
@@ -240,11 +246,13 @@ MidiButton([1, 15, ~mXone], BoolLangLangTarget(~deck4, \loop), mode: \toggle);
 MidiButton([1, 15, ~mXone], ContinuousLangTarget(~deck4, \loopTableIndex, clip: false), mode: \direct, feedbackMode: false, buttonValue: 9, active: { ~uShift });
 MidiCC([35, 15, ~mXone], ContinuousLangTarget(~deck4, \loopTableIndex, clip: false), mode: \relativeRound);
 
-//etc
+//etc i.e. effects
 MidiCC([22, 11, ~mXone], ServerTarget(~sOutputs, \gainPrelisten), mode: \absolute);
 MidiCC([12, 11, ~mXone], ServerTarget(~sEffectKnobsR, \knob1), mode: \absolute);
 MidiCC([27, 11, ~mXone], ServerTarget(~sEffectKnobsR, \knob2), mode: \absolute);
 MidiCC([14, 11, ~mXone], ServerTarget(~sEffectKnobsR, \knob3), mode: \absolute);
+
+//MidiButton([31, 11, ~mXone], ServerTarget(~sEffectKnobsR, \button1), mode: \toggle);
 
 // bcr
 // channel 1

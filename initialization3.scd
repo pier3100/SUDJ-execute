@@ -10,4 +10,4 @@
 
 // wind noise sound
 ~windMute = Value.new(false);
-~windParameter = Value.new(0.1);
+~windParameter = Value.new(1);

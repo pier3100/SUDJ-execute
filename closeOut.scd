@@ -1,6 +1,6 @@
 ~wind = f = { var par;
 	if(~windMute.value){ Synth("wind",[\bus, ~bWind,  \buf, ~buWind, \effectKnobsBus, ~bEffectKnobsBcr, \rate, 1+0.2.rand, \pos, 0, \pan, 2.0.rand -1], ~gChannel7) };
-	par = ~windParameter.value.linexp(0,1,0.01,5);
+	par = ~windParameter.value.linexp(0,1,0.05,5);
 	par + par.sqrt.sum3rand;
 };
 c.sched(1,~wind);

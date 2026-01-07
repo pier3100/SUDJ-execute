@@ -20,8 +20,9 @@
 ~bScopeAr= Bus.audio(s,1);
 ~bWind = Bus.audio(s,~numberChannels);
 ~bMicrophone = Bus.audio(s, ~numberChannels);
-~bEffectKnobsR = Bus.control(s, 4);
+~bEffectKnobsR = Bus.control(s, 8);
 ~bEffectKnobsBcr = Bus.control(s, 8);
 
 //buffer
 ~buWind = Buffer.read(s, "C:/Users/piert/MakingMusic/Samples/Falling/rocks-6129.mp3");
+~buRiser2 = Buffer.readChannel(s, "C:/Users/piert/MakingMusic/Samples/leaves-crunching-6954-bounce-2.wav", channels: [0]);
