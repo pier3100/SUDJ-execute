@@ -225,7 +225,7 @@ SynthDef(\riser2,{ |bus|
 	// engine sound generator
 	engine = PlayBuf.ar(1,~buRiser2,freq,loop: 1);
 	engine = engine * VolumeFaderCurve.kr(speed);
-	engine = DjFilter.ar(engine,lr);
+	engine = DjFilter.ar(engine,lr.linlin(0,1,0.3,0.7));
 	// windreverb
 	//wind = FreeVerb2.ar(engine[0],engine[1],1,1,0.1);
 	//wind = GVerb.ar(engine, drylevel: 0);
@@ -238,7 +238,7 @@ SynthDef(\riser2,{ |bus|
 	//wind = AnalogVintageDistortion.ar(wind,gasBrake.linlin(-0.15,0,1,0));
 	//out
 	out = engine + (1 * wind);// + brake;
-	out = out * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, 25, -25).dbamp; // -6 to +6 gain
+	out = out * ServerControlLag.kr(\gain, 0.5).linlin(0, 1, -25, 25).dbamp; // -6 to +6 gain
 	Out.ar(bus,out);
 }).add;
 

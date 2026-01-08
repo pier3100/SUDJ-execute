@@ -103,7 +103,7 @@ MidiButton([18, 0, ~mLaunchPad.customLighting([7,55])], BoolLangLangTarget(~blin
 //ThrustMaster
 ~hidList.selectKeys({ |item| item.productName =="T.Flight Stick X" })[0] !? {|hidID| // if we can find the a hid device with a corresponding name, then open this device and set it up
     ~hThrustMaster = HID.openAt(hidID); // we find and open the hid Pos device, assuming there is only one, and it is the barcode scanner
-    HidCC([1,~hThrustMaster], ServerTarget(~sChannel6, \faderVolume), invert: true);
+    //HidCC([1,~hThrustMaster], ServerTarget(~sChannel6, \gain), invert: true);
     HidCC([3,~hThrustMaster], ServerTarget(~sThrustMaster, \ud));
     HidCC([4,~hThrustMaster], ServerTarget(~sThrustMaster, \lr));
 }?? {
